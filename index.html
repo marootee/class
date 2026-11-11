@@ -546,10 +546,10 @@
 
   <script>
     // ==========================================================================
-    // PASTE YOUR SUPABASE CREDENTIALS HERE!
+    // SUPABASE CREDENTIALS (Hardcoded)
     // ==========================================================================
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_URL = 'https://uxwdqxmiwovsurbsvvnt.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_Xe6Mju2nQkeUzJ3R3UDGUg_8bgrOlBG';
     // ==========================================================================
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -642,7 +642,12 @@
             showToast(error.message, "❌");
             authSubmitBtn.innerText = "Sign Up";
           } else {
-            showToast("Account created! Logging in...", "🎉");
+            if (data.session) {
+              showToast("Account created & logged in!", "🎉");
+            } else {
+              showToast("Check your email for confirmation link!", "📧");
+              authSubmitBtn.innerText = "Sign Up";
+            }
           }
         }
       });
