@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- Prevents zooming and fixes width -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Nova AI - Ultimate Workspace</title>
 
@@ -69,15 +68,19 @@
     .auth-submit-btn { width: 100%; padding: 15px; margin-top: 10px; font-size: 18px; }
     .auth-toggle-btn { background: transparent; color: #aaa; margin-top: 15px; text-decoration: underline; font-size: 14px; cursor: pointer; }
 
-    /* Profile Modal (Mobile Slide-up) */
+    /* Profile Modal */
     #profile-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9000; background: rgba(0,0,0,0.7); display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(5px); }
     #profile-modal.active { display: flex; }
-    .profile-box { background: var(--bg-base); width: 100%; max-width: 500px; padding: 30px; border-radius: 30px 30px 0 0; border: 2px solid var(--primary); border-bottom: none; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); text-align: center; animation: slideUp 0.3s ease forwards; }
+    .profile-box { background: var(--bg-base); width: 100%; max-width: 500px; padding: 30px; border-radius: 30px 30px 0 0; border: 2px solid var(--primary); border-bottom: none; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); text-align: center; animation: slideUp 0.3s ease forwards; max-height: 90vh; overflow-y: auto;}
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .emoji-picker { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
     .emoji-option { font-size: 28px; padding: 10px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; background: var(--glass-bg); }
     .emoji-option.selected { border-color: var(--primary); background: var(--glass-hover); }
     .profile-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+
+    /* Mobile Theme Switcher inside Profile */
+    .mobile-theme-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; justify-content: center; }
+    .mobile-theme-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
 
     /* TOASTS */
     #toast-container { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
@@ -86,7 +89,7 @@
     @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
     /* ==========================================================================
-       SIDEBAR (DESKTOP ONLY)
+       SIDEBAR (DESKTOP)
        ========================================================================== */
     #sidebar { width: 280px; margin: 16px; display: flex; flex-direction: column; height: calc(100vh - 32px); z-index: 10; transition: width 0.3s; overflow: hidden; white-space: nowrap; }
     #sidebar.collapsed { width: 80px; }
@@ -137,6 +140,25 @@
     .task-item span { flex: 1; font-size: 16px; font-weight: 500; }
     .task-item.completed span { text-decoration: line-through; opacity: 0.5; }
     .task-item button { background: none; border: none; color: #ef4444; font-size: 20px; cursor: pointer;}
+
+    /* SOCIAL HUB */
+    .online-bar { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
+    .online-bar::-webkit-scrollbar { display: none; }
+    .online-user { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 60px; }
+    .online-user .avatar { width: 50px; height: 50px; font-size: 24px; border: 3px solid var(--primary); position: relative; }
+    .online-user .dot { position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: #10b981; border-radius: 50%; border: 2px solid var(--bg-base); }
+    .online-user span { font-size: 12px; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 60px; }
+    
+    .create-post { display: flex; gap: 10px; margin-bottom: 20px; }
+    .create-post textarea { flex: 1; padding: 15px; border-radius: var(--radius-md); border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); resize: none; outline: none; font-size: 15px; min-height: 50px; }
+    
+    .post-feed { display: flex; flex-direction: column; gap: 15px; }
+    .post-card { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; }
+    .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .post-header .avatar { width: 36px; height: 36px; font-size: 18px; }
+    .post-header .name { font-weight: 700; font-size: 15px; }
+    .post-header .time { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+    .post-content { font-size: 15px; line-height: 1.5; }
 
     /* AI STUDIO */
     #studio-screen { padding: 0; overflow: hidden; }
@@ -191,7 +213,7 @@
     @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
     /* ==========================================================================
-       MOBILE BOTTOM NAVIGATION BAR (SCROLLABLE)
+       MOBILE BOTTOM NAVIGATION BAR
        ========================================================================== */
     #mobile-nav {
       display: none;
@@ -214,11 +236,11 @@
     .m-nav-item:active { transform: scale(0.9); }
 
     /* ==========================================================================
-       MOBILE RESPONSIVENESS MAGIC
+       MOBILE RESPONSIVENESS
        ========================================================================== */
     @media (max-width: 768px) {
       :root { --border-width: 1px; --radius-lg: 15px; --radius-md: 10px; }
-      body { padding-bottom: 65px; } /* Space for bottom nav */
+      body { padding-bottom: 65px; }
       #sidebar { display: none !important; }
       #mobile-nav { display: flex; }
       
@@ -301,6 +323,19 @@
         <div class="emoji-option" data-emoji="🦁">🦁</div>
         <div class="emoji-option" data-emoji="⚡">⚡</div>
       </div>
+
+      <!-- MOBILE THEME SWITCHER -->
+      <div style="text-align: left; margin-bottom: 10px; font-weight: 600; font-size: 14px;">App Theme:</div>
+      <div class="mobile-theme-picker">
+        <div class="mobile-theme-btn" data-theme="theme-official" title="Official">💼</div>
+        <div class="mobile-theme-btn" data-theme="theme-natural" title="Natural">🌿</div>
+        <div class="mobile-theme-btn" data-theme="theme-doodle" title="Doodle">✏️</div>
+        <div class="mobile-theme-btn" data-theme="theme-cartoon" title="Cartoon">🎈</div>
+        <div class="mobile-theme-btn" data-theme="theme-cyberpunk" title="Cyberpunk">🤖</div>
+        <div class="mobile-theme-btn" data-theme="theme-ocean" title="Ocean">🌊</div>
+        <div class="mobile-theme-btn" data-theme="theme-sunset" title="Sunset">🌅</div>
+      </div>
+
       <div class="profile-actions">
         <button class="btn btn-primary" id="save-profile-btn">Save Changes</button>
         <button class="btn btn-secondary" id="modal-close-btn">Close</button>
@@ -312,7 +347,7 @@
   <!-- MOBILE HEADER & BACK BUTTON -->
   <div class="mobile-header" id="mobile-header">
     <div style="font-size: 20px; font-weight: 800;">Nova<span style="color:var(--primary)">.AI</span></div>
-    <div class="avatar" id="mobile-avatar" style="width: 36px; height: 36px; font-size: 18px;">🦊</div>
+    <div class="avatar" id="mobile-avatar" style="width: 36px; height: 36px; font-size: 18px;" onclick="document.getElementById('profile-modal').classList.add('active')">🦊</div>
   </div>
   <div class="mobile-back-btn" id="mobile-back-btn">← Back</div>
 
@@ -328,6 +363,7 @@
     <button class="new-chat-btn" id="new-chat-btn">+ <span>New Chat</span></button>
     <div class="nav-menu">
       <div class="nav-item active" data-target="dashboard-screen" onclick="switchScreen('dashboard-screen', this)">🏠 <span>Dashboard</span></div>
+      <div class="nav-item" data-target="social-screen" onclick="switchScreen('social-screen', this)">🌐 <span>Social Hub</span></div>
       <div class="nav-item" data-target="studio-screen" onclick="switchScreen('studio-screen', this)">💬 <span>AI Studio</span></div>
       <div class="nav-item" data-target="quiz-screen" onclick="switchScreen('quiz-screen', this)">📝 <span>Quizzes</span></div>
       <div class="nav-item" data-target="motivation-screen" onclick="switchScreen('motivation-screen', this)">🔥 <span>Motivation</span></div>
@@ -383,6 +419,25 @@
           </div>
           <div class="task-list" id="task-list"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- SOCIAL HUB -->
+    <div id="social-screen" class="screen glass">
+      <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🌐 Social Hub</h1>
+      
+      <div style="font-weight: 700; font-size: 16px; margin-bottom: 10px;">Who's Online</div>
+      <div class="online-bar" id="online-bar">
+        <!-- Online users will load here -->
+      </div>
+
+      <div class="create-post">
+        <textarea id="post-content" placeholder="Share a thought, study tip, or ask for help..."></textarea>
+        <button class="btn btn-primary" id="post-btn" style="height: auto;">Post</button>
+      </div>
+
+      <div class="post-feed" id="post-feed">
+        <!-- Posts will load here -->
       </div>
     </div>
 
@@ -489,9 +544,10 @@
 
   </main>
 
-  <!-- MOBILE BOTTOM NAVIGATION (SCROLLABLE) -->
+  <!-- MOBILE BOTTOM NAVIGATION -->
   <nav id="mobile-nav">
     <div class="m-nav-item active" data-target="dashboard-screen" onclick="switchScreen('dashboard-screen', this)">🏠<span>Home</span></div>
+    <div class="m-nav-item" data-target="social-screen" onclick="switchScreen('social-screen', this)">🌐<span>Social</span></div>
     <div class="m-nav-item" data-target="studio-screen" onclick="switchScreen('studio-screen', this)">💬<span>AI Chat</span></div>
     <div class="m-nav-item" data-target="quiz-screen" onclick="switchScreen('quiz-screen', this)">📝<span>Quizzes</span></div>
     <div class="m-nav-item" data-target="motivation-screen" onclick="switchScreen('motivation-screen', this)">🔥<span>Motivation</span></div>
@@ -499,7 +555,6 @@
     <div class="m-nav-item" data-target="music-screen" onclick="switchScreen('music-screen', this)">🎵<span>Music</span></div>
     <div class="m-nav-item" data-target="syllabus-screen" onclick="switchScreen('syllabus-screen', this)">📚<span>Syllabus</span></div>
     <div class="m-nav-item" data-target="flashcard-screen" onclick="switchScreen('flashcard-screen', this)">🃏<span>Flashcards</span></div>
-    <div class="m-nav-item" onclick="document.getElementById('profile-modal').classList.add('active')">👤<span>Profile</span></div>
   </nav>
 
   <script>
@@ -631,6 +686,10 @@
           });
         }
         renderPlanner();
+
+        // Load Social Data
+        loadSocialFeed();
+        loadOnlineUsers();
       }
 
       // UI UPDATES
@@ -682,6 +741,75 @@
 
       document.getElementById('modal-close-btn').addEventListener('click', () => {
         document.getElementById('profile-modal').classList.remove('active');
+      });
+
+      // SOCIAL HUB LOGIC
+      async function loadOnlineUsers() {
+        const bar = document.getElementById('online-bar');
+        // Simulating online users by fetching recently active profiles
+        const { data: profiles } = await supabase.from('profiles').select('*').limit(10);
+        if (profiles) {
+          bar.innerHTML = profiles.map(p => `
+            <div class="online-user">
+              <div class="avatar">${p.avatar || '🦊'}<div class="dot"></div></div>
+              <span>${p.name}</span>
+            </div>
+          `).join('');
+        }
+      }
+
+      async function loadSocialFeed() {
+        const feed = document.getElementById('post-feed');
+        feed.innerHTML = `<p style="text-align:center;">Loading feed...</p>`;
+        
+        // Fetch posts and join with profiles
+        const { data: posts, error } = await supabase
+          .from('posts')
+          .select('*, profiles(name, avatar)')
+          .order('created_at', { ascending: false })
+          .limit(20);
+
+        if (error) { console.error(error); return; }
+
+        if (posts.length === 0) {
+          feed.innerHTML = `<p style="text-align:center; color:var(--text-muted);">No posts yet. Be the first to share!</p>`;
+          return;
+        }
+
+        feed.innerHTML = posts.map(post => {
+          const time = new Date(post.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          return `
+            <div class="post-card">
+              <div class="post-header">
+                <div class="avatar">${post.profiles?.avatar || '🦊'}</div>
+                <div class="name">${post.profiles?.name || 'Student'}</div>
+                <div class="time">${time}</div>
+              </div>
+              <div class="post-content">${post.content}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('post-btn').addEventListener('click', async () => {
+        if (!currentUser) return;
+        const input = document.getElementById('post-content');
+        const content = input.value.trim();
+        if (!content) return;
+
+        const btn = document.getElementById('post-btn');
+        btn.innerText = "Posting..."; btn.disabled = true;
+
+        const { error } = await supabase.from('posts').insert([{ user_id: currentUser.id, content }]);
+        
+        if (error) {
+          showToast("Failed to post: " + error.message, true);
+        } else {
+          input.value = '';
+          showToast("Posted successfully!");
+          loadSocialFeed();
+        }
+        btn.innerText = "Post"; btn.disabled = false;
       });
 
       // TASKS
@@ -772,7 +900,7 @@
           navElement.classList.add('active');
         }
         
-        // Update mobile bottom nav & auto-scroll to active tab
+        // Update mobile bottom nav & auto-scroll
         document.querySelectorAll('.m-nav-item').forEach(n => {
           if(n.dataset.target === screenId) {
             n.classList.add('active');
@@ -796,13 +924,18 @@
         switchScreen('dashboard-screen', document.querySelector('.nav-item'));
       });
 
-      // THEME SWITCHER
+      // THEME SWITCHER (Desktop & Mobile)
+      function applyTheme(theme) {
+        document.body.className = theme;
+        localStorage.setItem("nova_theme", theme);
+      }
+
       document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const theme = e.currentTarget.dataset.theme;
-          document.body.className = theme;
-          localStorage.setItem("nova_theme", theme);
-        });
+        btn.addEventListener('click', (e) => applyTheme(e.currentTarget.dataset.theme));
+      });
+      
+      document.querySelectorAll('.mobile-theme-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => applyTheme(e.currentTarget.dataset.theme));
       });
 
       // AI STUDIO
