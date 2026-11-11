@@ -78,7 +78,6 @@
     .emoji-option.selected { border-color: var(--primary); background: var(--glass-hover); }
     .profile-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 
-    /* Mobile Theme Switcher inside Profile */
     .mobile-theme-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; justify-content: center; }
     .mobile-theme-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
 
@@ -141,24 +140,44 @@
     .task-item.completed span { text-decoration: line-through; opacity: 0.5; }
     .task-item button { background: none; border: none; color: #ef4444; font-size: 20px; cursor: pointer;}
 
-    /* SOCIAL HUB */
-    .online-bar { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
-    .online-bar::-webkit-scrollbar { display: none; }
-    .online-user { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 60px; }
-    .online-user .avatar { width: 50px; height: 50px; font-size: 24px; border: 3px solid var(--primary); position: relative; }
-    .online-user .dot { position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: #10b981; border-radius: 50%; border: 2px solid var(--bg-base); }
-    .online-user span { font-size: 12px; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 60px; }
+    /* ==========================================================================
+       SOCIAL HUB (Instagram/Twitter Style)
+       ========================================================================== */
+    .social-container { max-width: 800px; margin: 0 auto; width: 100%; }
     
-    .create-post { display: flex; gap: 10px; margin-bottom: 20px; }
-    .create-post textarea { flex: 1; padding: 15px; border-radius: var(--radius-md); border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); resize: none; outline: none; font-size: 15px; min-height: 50px; }
-    
-    .post-feed { display: flex; flex-direction: column; gap: 15px; }
-    .post-card { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; }
-    .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .post-header .avatar { width: 36px; height: 36px; font-size: 18px; }
-    .post-header .name { font-weight: 700; font-size: 15px; }
-    .post-header .time { font-size: 12px; color: var(--text-muted); margin-left: auto; }
-    .post-content { font-size: 15px; line-height: 1.5; }
+    /* Users Row */
+    .users-section { margin-bottom: 30px; }
+    .users-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .users-row { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+    .users-row::-webkit-scrollbar { display: none; }
+    .user-badge { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 65px; cursor: pointer; }
+    .user-badge .avatar-wrap { position: relative; width: 60px; height: 60px; }
+    .user-badge .avatar { width: 100%; height: 100%; font-size: 28px; border: 2px solid transparent; }
+    .user-badge.online .avatar { border-color: var(--primary); }
+    .user-badge .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--bg-base); background: #64748b; }
+    .user-badge.online .status-dot { background: #10b981; }
+    .user-badge span { font-size: 12px; font-weight: 600; text-align: center; width: 65px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Create Post */
+    .create-post-box { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 30px; box-shadow: var(--shadow); display: flex; gap: 15px; }
+    .create-post-box .avatar { width: 50px; height: 50px; font-size: 26px; }
+    .create-post-input-area { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .create-post-input-area textarea { width: 100%; border: none; background: transparent; color: var(--text-main); font-size: 16px; resize: none; outline: none; min-height: 60px; }
+    .create-post-actions { display: flex; justify-content: flex-end; border-top: 1px solid var(--glass-border); padding-top: 10px; }
+
+    /* Feed */
+    .feed { display: flex; flex-direction: column; gap: 20px; }
+    .post { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
+    .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+    .post-header .avatar { width: 42px; height: 42px; font-size: 20px; }
+    .post-info { display: flex; flex-direction: column; }
+    .post-info .name { font-weight: 700; font-size: 16px; }
+    .post-info .time { font-size: 12px; color: var(--text-muted); }
+    .post-content { font-size: 15px; line-height: 1.6; margin-bottom: 15px; word-wrap: break-word; }
+    .post-actions { display: flex; gap: 20px; border-top: 1px solid var(--glass-border); padding-top: 12px; }
+    .post-action-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+    .post-action-btn:hover { color: var(--primary); }
+    .post-action-btn.liked { color: #ef4444; }
 
     /* AI STUDIO */
     #studio-screen { padding: 0; overflow: hidden; }
@@ -324,7 +343,6 @@
         <div class="emoji-option" data-emoji="⚡">⚡</div>
       </div>
 
-      <!-- MOBILE THEME SWITCHER -->
       <div style="text-align: left; margin-bottom: 10px; font-weight: 600; font-size: 14px;">App Theme:</div>
       <div class="mobile-theme-picker">
         <div class="mobile-theme-btn" data-theme="theme-official" title="Official">💼</div>
@@ -424,20 +442,32 @@
 
     <!-- SOCIAL HUB -->
     <div id="social-screen" class="screen glass">
-      <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🌐 Social Hub</h1>
-      
-      <div style="font-weight: 700; font-size: 16px; margin-bottom: 10px;">Who's Online</div>
-      <div class="online-bar" id="online-bar">
-        <!-- Online users will load here -->
-      </div>
+      <div class="social-container">
+        <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🌐 Student Community</h1>
+        
+        <!-- Users Section -->
+        <div class="users-section">
+          <div class="users-title">All Students</div>
+          <div class="users-row" id="users-row">
+            <!-- Users load here -->
+          </div>
+        </div>
 
-      <div class="create-post">
-        <textarea id="post-content" placeholder="Share a thought, study tip, or ask for help..."></textarea>
-        <button class="btn btn-primary" id="post-btn" style="height: auto;">Post</button>
-      </div>
+        <!-- Create Post -->
+        <div class="create-post-box">
+          <div class="avatar" id="create-post-avatar">🦊</div>
+          <div class="create-post-input-area">
+            <textarea id="post-content" placeholder="What's on your mind? Share a study tip or ask a doubt..."></textarea>
+            <div class="create-post-actions">
+              <button class="btn btn-primary" id="post-btn">Post</button>
+            </div>
+          </div>
+        </div>
 
-      <div class="post-feed" id="post-feed">
-        <!-- Posts will load here -->
+        <!-- Feed -->
+        <div class="feed" id="post-feed">
+          <!-- Posts load here -->
+        </div>
       </div>
     </div>
 
@@ -688,8 +718,8 @@
         renderPlanner();
 
         // Load Social Data
+        loadAllUsers();
         loadSocialFeed();
-        loadOnlineUsers();
       }
 
       // UI UPDATES
@@ -698,6 +728,7 @@
         document.getElementById('sidebar-name').innerText = state.profile.name;
         document.getElementById('sidebar-avatar').innerText = state.profile.avatar || "🦊";
         document.getElementById('mobile-avatar').innerText = state.profile.avatar || "🦊";
+        document.getElementById('create-post-avatar').innerText = state.profile.avatar || "🦊";
         document.getElementById('profile-display-avatar').innerText = state.profile.avatar || "🦊";
         document.getElementById('profile-name-input').value = state.profile.name;
         document.getElementById('dash-xp').innerText = state.profile.xp;
@@ -743,49 +774,82 @@
         document.getElementById('profile-modal').classList.remove('active');
       });
 
-      // SOCIAL HUB LOGIC
-      async function loadOnlineUsers() {
-        const bar = document.getElementById('online-bar');
-        // Simulating online users by fetching recently active profiles
-        const { data: profiles } = await supabase.from('profiles').select('*').limit(10);
-        if (profiles) {
-          bar.innerHTML = profiles.map(p => `
-            <div class="online-user">
-              <div class="avatar">${p.avatar || '🦊'}<div class="dot"></div></div>
+      // ==========================================================================
+      // SOCIAL HUB LOGIC (FIXED & UPGRADED)
+      // ==========================================================================
+      
+      async function loadAllUsers() {
+        const row = document.getElementById('users-row');
+        const { data: profiles, error } = await supabase.from('profiles').select('*').limit(20);
+        
+        if (error || !profiles) {
+          row.innerHTML = "<p>Could not load users.</p>";
+          return;
+        }
+
+        // Simulate online/offline for visual effect (Randomly assign for now, or use a last_seen field in real production)
+        row.innerHTML = profiles.map(p => {
+          const isOnline = Math.random() > 0.4; // 60% chance to show online
+          return `
+            <div class="user-badge ${isOnline ? 'online' : ''}">
+              <div class="avatar-wrap">
+                <div class="avatar">${p.avatar || '🦊'}</div>
+                <div class="status-dot"></div>
+              </div>
               <span>${p.name}</span>
             </div>
-          `).join('');
-        }
+          `;
+        }).join('');
       }
 
       async function loadSocialFeed() {
         const feed = document.getElementById('post-feed');
-        feed.innerHTML = `<p style="text-align:center;">Loading feed...</p>`;
+        feed.innerHTML = `<p style="text-align:center; padding:20px;">Loading feed...</p>`;
         
-        // Fetch posts and join with profiles
-        const { data: posts, error } = await supabase
+        // 1. Fetch all posts
+        const { data: posts, error: postError } = await supabase
           .from('posts')
-          .select('*, profiles(name, avatar)')
+          .select('*')
           .order('created_at', { ascending: false })
-          .limit(20);
+          .limit(30);
 
-        if (error) { console.error(error); return; }
+        if (postError) { 
+          console.error("Post fetch error:", postError); 
+          feed.innerHTML = `<p style="text-align:center; color:red;">Error loading posts.</p>`;
+          return; 
+        }
 
-        if (posts.length === 0) {
+        if (!posts || posts.length === 0) {
           feed.innerHTML = `<p style="text-align:center; color:var(--text-muted);">No posts yet. Be the first to share!</p>`;
           return;
         }
 
+        // 2. Fetch all profiles to map avatars/names manually (Fixes the join issue)
+        const { data: profiles } = await supabase.from('profiles').select('*');
+        const profileMap = {};
+        if (profiles) profiles.forEach(p => profileMap[p.id] = p);
+
+        // 3. Render Feed
         feed.innerHTML = posts.map(post => {
-          const time = new Date(post.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          const author = profileMap[post.user_id] || { name: 'Unknown Student', avatar: '👤' };
+          const date = new Date(post.created_at);
+          const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          
           return `
-            <div class="post-card">
+            <div class="post">
               <div class="post-header">
-                <div class="avatar">${post.profiles?.avatar || '🦊'}</div>
-                <div class="name">${post.profiles?.name || 'Student'}</div>
-                <div class="time">${time}</div>
+                <div class="avatar">${author.avatar}</div>
+                <div class="post-info">
+                  <div class="name">${author.name}</div>
+                  <div class="time">${timeStr}</div>
+                </div>
               </div>
               <div class="post-content">${post.content}</div>
+              <div class="post-actions">
+                <button class="post-action-btn like-btn" onclick="this.classList.toggle('liked')">❤️ Like</button>
+                <button class="post-action-btn">💬 Comment</button>
+                <button class="post-action-btn" onclick="navigator.clipboard.writeText('${post.content}'); showToast('Copied to clipboard!')">🔗 Share</button>
+              </div>
             </div>
           `;
         }).join('');
@@ -804,10 +868,11 @@
         
         if (error) {
           showToast("Failed to post: " + error.message, true);
+          console.error(error);
         } else {
           input.value = '';
           showToast("Posted successfully!");
-          loadSocialFeed();
+          loadSocialFeed(); // Reload feed
         }
         btn.innerText = "Post"; btn.disabled = false;
       });
@@ -924,7 +989,7 @@
         switchScreen('dashboard-screen', document.querySelector('.nav-item'));
       });
 
-      // THEME SWITCHER (Desktop & Mobile)
+      // THEME SWITCHER
       function applyTheme(theme) {
         document.body.className = theme;
         localStorage.setItem("nova_theme", theme);
