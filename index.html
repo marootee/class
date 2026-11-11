@@ -218,7 +218,7 @@
     .planner-cell { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); min-height: 100px; padding: 10px; cursor: pointer; }
     .planner-task { background: var(--primary); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 13px; margin-bottom: 5px; display: flex; justify-content: space-between; }
 
-    /* MUSIC (UPDATED) */
+    /* MUSIC (FULL SONGS) */
     .music-search-row { display: flex; gap: 10px; margin-bottom: 24px; }
     .music-search-row input { flex: 1; padding: 14px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); outline: none; border-radius: var(--radius-md); }
     .music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
@@ -453,7 +453,11 @@
     <!-- SOCIAL HUB -->
     <div id="social-screen" class="screen glass">
       <div class="social-container">
-        <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🌐 Student Community</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; margin-top: 10px;">
+          <h1 style="font-size: 24px;">🌐 Student Community</h1>
+          <!-- ADMIN DELETE FEED BUTTON (Hidden by default) -->
+          <button id="admin-delete-feed-btn" class="btn btn-primary" style="display: none; background: #ef4444; border-color: #ef4444; padding: 8px 12px; font-size: 14px;">Delete Feed</button>
+        </div>
         
         <!-- Users Section -->
         <div class="users-section">
@@ -555,25 +559,22 @@
       </div>
     </div>
 
-    <!-- MUSIC (UPDATED LAYOUT) -->
+    <!-- MUSIC (FULL LENGTH SONGS) -->
     <div id="music-screen" class="screen glass">
       <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🎵 Music</h1>
       
-      <!-- Search Bar -->
       <div class="music-search-row">
-        <input type="text" id="music-search-input" placeholder="Search full-length songs...">
+        <input type="text" id="music-search-input" placeholder="Search songs (e.g. Kesariya, Arijit Singh)...">
         <button class="btn btn-primary" id="music-search-btn">Search</button>
       </div>
       
-      <!-- Search Results (Moved to Top) -->
       <div id="search-results-container" style="display: none; margin-bottom: 30px;">
         <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--primary);">Search Results</h2>
         <div class="music-grid" id="music-grid"></div>
       </div>
 
-      <!-- Trending / Motivational Section -->
       <div id="trending-container">
-        <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--primary);">🔥 Motivational Songs</h2>
+        <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--primary);">🔥 Trending Hits</h2>
         <div class="music-grid" id="trending-grid"></div>
       </div>
     </div>
@@ -704,11 +705,19 @@
           currentUser = session.user;
           authOverlay.classList.add('hidden');
           loadUserData();
+          
+          // ADMIN CHECK
+          if (currentUser.email === 'marootee@novaapp.com') {
+            document.getElementById('admin-delete-feed-btn').style.display = 'block';
+          } else {
+            document.getElementById('admin-delete-feed-btn').style.display = 'none';
+          }
         } else {
           currentUser = null;
           authOverlay.classList.remove('hidden');
           state.profile = { name: "Student", xp: 0, avatar: "🦊" }; state.tasks = []; state.planner = {};
           updateUI(); renderTasks(); renderPlanner();
+          document.getElementById('admin-delete-feed-btn').style.display = 'none';
         }
       });
 
@@ -894,6 +903,23 @@
           `;
         }).join('');
       }
+
+      // ADMIN DELETE FEED
+      document.getElementById('admin-delete-feed-btn').addEventListener('click', async () => {
+        if (!confirm("ADMIN: Are you sure you want to delete ALL posts and comments?")) return;
+        
+        // Delete all comments first
+        await supabase.from('comments').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        // Delete all posts
+        const { error } = await supabase.from('posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        
+        if (!error) {
+          showToast("Feed reset successfully!");
+          loadSocialFeed();
+        } else {
+          showToast("Error: " + error.message, true);
+        }
+      });
 
       window.addComment = async function(postId) {
         if (!currentUser) return;
@@ -1296,26 +1322,27 @@
         }
       });
 
-      // ==========================================================================
-      // MUSIC (AUDIUS API - FULL LENGTH SONGS)
-      // ==========================================================================
+      // MUSIC (JioSaavn API for FULL SONGS)
       async function loadTrending() {
         const grid = document.getElementById('trending-grid');
-        grid.innerHTML = "<p>Loading motivational songs...</p>";
+        grid.innerHTML = "<p>Loading trending songs...</p>";
         try {
-          // Fetch from Audius for full-length tracks
-          const res = await fetch(`https://discoveryprovider.audius.co/v1/tracks/trending?app_name=NovaAI&limit=6`);
+          const res = await fetch(`https://saavn.dev/api/search/songs?query=trending+hits&limit=8`);
           const data = await res.json();
           
-          if(data.data && data.data.length > 0) {
-            grid.innerHTML = data.data.map(t => `
-              <div class="music-card">
-                <img src="${t.artwork ? t.artwork['480x480'] : 'https://via.placeholder.com/200'}">
-                <h4 style="font-size:14px; margin:5px 0;">${t.title}</h4>
-                <p style="font-size:12px; color:var(--text-muted);">${t.user.name}</p>
-                <audio controls src="https://discoveryprovider.audius.co/v1/tracks/${t.id}/stream?app_name=NovaAI"></audio>
-              </div>
-            `).join('');
+          if(data.data && data.data.results && data.data.results.length > 0) {
+            grid.innerHTML = data.data.results.map(t => {
+              const streamUrl = t.downloadUrl && t.downloadUrl.length > 0 ? t.downloadUrl[t.downloadUrl.length - 1].link : '#';
+              const imgUrl = t.image && t.image.length > 0 ? t.image[t.image.length - 1].link : 'https://via.placeholder.com/200';
+              return `
+                <div class="music-card">
+                  <img src="${imgUrl}">
+                  <h4 style="font-size:14px; margin:5px 0;">${t.name}</h4>
+                  <p style="font-size:12px; color:var(--text-muted);">${t.primaryArtistsId ? t.primaryArtists : 'Various Artists'}</p>
+                  <audio controls src="${streamUrl}"></audio>
+                </div>
+              `;
+            }).join('');
           } else {
             grid.innerHTML = "<p>Could not load songs.</p>";
           }
@@ -1333,25 +1360,28 @@
         const trendingContainer = document.getElementById('trending-container');
         const grid = document.getElementById('music-grid');
         
-        // Show search container, hide trending
         searchContainer.style.display = 'block';
         trendingContainer.style.display = 'none';
         
         grid.innerHTML = "<p>Searching full songs...</p>";
         
         try {
-          const res = await fetch(`https://discoveryprovider.audius.co/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=NovaAI&limit=12`);
+          const res = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}&limit=12`);
           const data = await res.json();
           
-          if (data.data && data.data.length > 0) {
-            grid.innerHTML = data.data.map(t => `
-              <div class="music-card">
-                <img src="${t.artwork ? t.artwork['480x480'] : 'https://via.placeholder.com/200'}">
-                <h4 style="font-size:14px; margin:5px 0;">${t.title}</h4>
-                <p style="font-size:12px; color:var(--text-muted);">${t.user.name}</p>
-                <audio controls src="https://discoveryprovider.audius.co/v1/tracks/${t.id}/stream?app_name=NovaAI"></audio>
-              </div>
-            `).join('');
+          if (data.data && data.data.results && data.data.results.length > 0) {
+            grid.innerHTML = data.data.results.map(t => {
+              const streamUrl = t.downloadUrl && t.downloadUrl.length > 0 ? t.downloadUrl[t.downloadUrl.length - 1].link : '#';
+              const imgUrl = t.image && t.image.length > 0 ? t.image[t.image.length - 1].link : 'https://via.placeholder.com/200';
+              return `
+                <div class="music-card">
+                  <img src="${imgUrl}">
+                  <h4 style="font-size:14px; margin:5px 0;">${t.name}</h4>
+                  <p style="font-size:12px; color:var(--text-muted);">${t.primaryArtistsId ? t.primaryArtists : 'Unknown'}</p>
+                  <audio controls src="${streamUrl}"></audio>
+                </div>
+              `;
+            }).join('');
           } else {
             grid.innerHTML = "<p>No songs found.</p>";
           }
