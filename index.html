@@ -122,13 +122,24 @@
     .auth-toggle-btn { background: transparent; color: #aaa; margin-top: 15px; text-decoration: underline; font-size: 14px; cursor: pointer; }
 
     /* ==========================================================================
-       TOASTS (Solid)
+       TOASTS (SOLID & HIGH CONTRAST)
        ========================================================================== */
     #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
     .toast {
-      background: #10b981; color: #ffffff; padding: 16px 24px; border-radius: var(--radius-md);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-weight: 700; font-size: 16px; animation: slideInRight 0.3s ease forwards;
-      display: flex; align-items: center; gap: 10px; border: 2px solid #ffffff; pointer-events: auto;
+      background: #10b981;
+      color: #ffffff;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      font-weight: 700;
+      font-size: 16px;
+      animation: slideInRight 0.3s ease forwards;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid #ffffff;
+      pointer-events: auto;
+      backdrop-filter: none;
     }
     .toast.error { background: #ef4444; }
     @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -644,7 +655,6 @@
 
         if (!name || !cls || !sec) return showToast("Please fill Name, Class, and Section", true);
 
-        // Generate hidden credentials
         const safeName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
         const dummyEmail = `${safeName}_${cls}_${sec}@novastudent.com`;
         const dummyPassword = `pass_${safeName}_${cls}${sec}`;
@@ -692,22 +702,26 @@
         if (!currentUser) return;
 
         // Profile
-        let { data: profile } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+        let { data: profile, error: profErr } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+        if (profErr) console.warn("Profile fetch error:", profErr);
         if (!profile) {
           const rawName = currentUser.email.split('@')[0].split('_')[0];
-          const { data } = await supabase.from('profiles').insert([{ id: currentUser.id, name: rawName, xp: 0 }]).select().single();
+          const { data, error } = await supabase.from('profiles').insert([{ id: currentUser.id, name: rawName, xp: 0 }]).select().single();
+          if (error) console.error("Profile insert error:", error);
           profile = data;
         }
         state.profile = profile || { name: "Student", xp: 0 };
         updateUI();
 
         // Tasks
-        const { data: tasks } = await supabase.from('tasks').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: true });
+        const { data: tasks, error: taskErr } = await supabase.from('tasks').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: true });
+        if (taskErr) console.warn("Tasks fetch error:", taskErr);
         state.tasks = tasks || [];
         renderTasks();
 
         // Planner
-        const { data: plannerRows } = await supabase.from('planner').select('*').eq('user_id', currentUser.id);
+        const { data: plannerRows, error: planErr } = await supabase.from('planner').select('*').eq('user_id', currentUser.id);
+        if (planErr) console.warn("Planner fetch error:", planErr);
         state.planner = {};
         if (plannerRows) {
           plannerRows.forEach(row => {
@@ -736,11 +750,12 @@
         state.profile.xp += amount;
         updateUI();
         showToast(`+${amount} XP earned!`);
-        await supabase.from('profiles').update({ xp: state.profile.xp }).eq('id', currentUser.id);
+        const { error } = await supabase.from('profiles').update({ xp: state.profile.xp }).eq('id', currentUser.id);
+        if (error) console.error("XP update error:", error);
       }
 
       // ========================================================================
-      // 6. TASKS (Cloud Sync)
+      // 6. TASKS (Cloud Sync with Error Logging)
       // ========================================================================
       function renderTasks() {
         const list = document.getElementById('task-list');
@@ -766,7 +781,8 @@
 
         const { data, error } = await supabase.from('tasks').insert([{ user_id: currentUser.id, text, done: false }]).select().single();
         if (error) {
-          showToast("Failed to save task", true);
+          console.error("Task insert error:", error);
+          showToast("Failed to save task: " + error.message, true);
           state.tasks = state.tasks.filter(t => t.id !== tempId);
         } else {
           state.tasks = state.tasks.map(t => t.id === tempId ? data : t);
@@ -784,7 +800,8 @@
           if (id.startsWith('temp-')) return;
           const done = e.target.checked;
           
-          await supabase.from('tasks').update({ done }).eq('id', id);
+          const { error } = await supabase.from('tasks').update({ done }).eq('id', id);
+          if (error) console.error("Task update error:", error);
           const task = state.tasks.find(t => t.id === id);
           if (task) task.done = done;
           if (done) addXP(5);
@@ -793,7 +810,8 @@
           const id = e.target.dataset.id;
           if (id.startsWith('temp-')) return;
           
-          await supabase.from('tasks').delete().eq('id', id);
+          const { error } = await supabase.from('tasks').delete().eq('id', id);
+          if (error) console.error("Task delete error:", error);
           state.tasks = state.tasks.filter(t => t.id !== id);
           renderTasks();
           showToast("Task deleted");
@@ -1014,7 +1032,7 @@
       });
 
       // ========================================================================
-      // 9. PLANNER (Cloud Sync)
+      // 9. PLANNER (Cloud Sync with Error Logging)
       // ========================================================================
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
       const timeSlots = ["08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00"];
@@ -1047,7 +1065,8 @@
               user_id: currentUser.id, day, slot, task_text: taskText.trim() 
             }]).select().single();
 
-            if (!error && data) {
+            if (error) { console.error("Planner insert error:", error); showToast("Failed to save: " + error.message, true); }
+            else if (data) {
               if (!state.planner[day]) state.planner[day] = {};
               if (!state.planner[day][slot]) state.planner[day][slot] = [];
               state.planner[day][slot].push(data);
@@ -1058,7 +1077,8 @@
         if (e.target.classList.contains('plan-delete-btn')) {
           e.stopPropagation();
           const id = e.target.dataset.id;
-          await supabase.from('planner').delete().eq('id', id);
+          const { error } = await supabase.from('planner').delete().eq('id', id);
+          if (error) console.error("Planner delete error:", error);
           
           const { data: plannerRows } = await supabase.from('planner').select('*').eq('user_id', currentUser.id);
           state.planner = {};
@@ -1135,7 +1155,8 @@
         if (!currentUser) return;
         state.profile.name = document.getElementById('settings-name').value.trim() || "Student";
         updateUI();
-        await supabase.from('profiles').update({ name: state.profile.name }).eq('id', currentUser.id);
+        const { error } = await supabase.from('profiles').update({ name: state.profile.name }).eq('id', currentUser.id);
+        if (error) console.error("Name update error:", error);
         showToast("Saved to Cloud!");
       });
 
