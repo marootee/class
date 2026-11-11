@@ -37,60 +37,17 @@
       --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    body.theme-doodle {
-      --bg-base: #fdfbf7; --bg-overlay: transparent; --glass-bg: #ffffff; --glass-border: #2c2c2c;
-      --glass-hover: #f0f0f0; --primary: #ff4d4d; --primary-hover: #ff3333; --text-main: #2c2c2c;
-      --text-muted: #666666; --border-width: 2px; --radius-lg: 255px 15px 225px 15px/15px 225px 15px 255px;
-      --radius-md: 15px 255px 15px 225px/225px 15px 255px 15px; --shadow: 4px 4px 0px #2c2c2c;
-      --font: 'Caveat', cursive; --font-heading: 'Caveat', cursive;
-    }
-
-    body.theme-cartoon {
-      --bg-base: #ffde59; --bg-overlay: transparent; --glass-bg: #ffffff; --glass-border: #000000;
-      --glass-hover: #ffeaa7; --primary: #00a8ff; --primary-hover: #0097e6; --text-main: #000000;
-      --text-muted: #333333; --border-width: 4px; --radius-lg: 20px; --radius-md: 12px;
-      --shadow: 6px 6px 0px #000; --font: 'Outfit', sans-serif; --font-heading: 'Bangers', cursive;
-    }
-
-    body.theme-cyberpunk {
-      --bg-base: #050014; --bg-overlay: rgba(5, 0, 20, 0.85); --glass-bg: rgba(20, 0, 50, 0.8);
-      --glass-border: #ff00ff; --glass-hover: rgba(40, 0, 100, 0.9); --primary: #00ffff;
-      --primary-hover: #00cccc; --text-main: #ffffff; --text-muted: #ff00ff; --border-width: 2px;
-      --shadow: 0 0 15px #ff00ff;
-    }
-
-    body.theme-ocean {
-      --bg-base: #021a30; --bg-overlay: rgba(2, 26, 48, 0.8); --glass-bg: rgba(4, 40, 70, 0.8);
-      --glass-border: rgba(6, 182, 212, 0.4); --glass-hover: rgba(8, 60, 100, 0.9); --primary: #06b6d4;
-      --primary-hover: #0891b2; --text-main: #ecfeff; --text-muted: #67e8f9; --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-    }
-
-    body.theme-sunset {
-      --bg-base: #1c0808; --bg-overlay: rgba(28, 8, 8, 0.8); --glass-bg: rgba(50, 15, 15, 0.8);
-      --glass-border: rgba(249, 115, 22, 0.4); --glass-hover: rgba(80, 25, 25, 0.9); --primary: #f97316;
-      --primary-hover: #ea580c; --text-main: #fff7ed; --text-muted: #fdba74; --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-    }
+    body.theme-doodle { --bg-base: #fdfbf7; --bg-overlay: transparent; --glass-bg: #ffffff; --glass-border: #2c2c2c; --glass-hover: #f0f0f0; --primary: #ff4d4d; --primary-hover: #ff3333; --text-main: #2c2c2c; --text-muted: #666666; --border-width: 2px; --radius-lg: 255px 15px 225px 15px/15px 225px 15px 255px; --radius-md: 15px 255px 15px 225px/225px 15px 255px 15px; --shadow: 4px 4px 0px #2c2c2c; --font: 'Caveat', cursive; --font-heading: 'Caveat', cursive; }
+    body.theme-cartoon { --bg-base: #ffde59; --bg-overlay: transparent; --glass-bg: #ffffff; --glass-border: #000000; --glass-hover: #ffeaa7; --primary: #00a8ff; --primary-hover: #0097e6; --text-main: #000000; --text-muted: #333333; --border-width: 4px; --radius-lg: 20px; --radius-md: 12px; --shadow: 6px 6px 0px #000; --font: 'Outfit', sans-serif; --font-heading: 'Bangers', cursive; }
+    body.theme-cyberpunk { --bg-base: #050014; --bg-overlay: rgba(5, 0, 20, 0.85); --glass-bg: rgba(20, 0, 50, 0.8); --glass-border: #ff00ff; --glass-hover: rgba(40, 0, 100, 0.9); --primary: #00ffff; --primary-hover: #00cccc; --text-main: #ffffff; --text-muted: #ff00ff; --border-width: 2px; --shadow: 0 0 15px #ff00ff; }
+    body.theme-ocean { --bg-base: #021a30; --bg-overlay: rgba(2, 26, 48, 0.8); --glass-bg: rgba(4, 40, 70, 0.8); --glass-border: rgba(6, 182, 212, 0.4); --glass-hover: rgba(8, 60, 100, 0.9); --primary: #06b6d4; --primary-hover: #0891b2; --text-main: #ecfeff; --text-muted: #67e8f9; --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6); }
+    body.theme-sunset { --bg-base: #1c0808; --bg-overlay: rgba(28, 8, 8, 0.8); --glass-bg: rgba(50, 15, 15, 0.8); --glass-border: rgba(249, 115, 22, 0.4); --glass-hover: rgba(80, 25, 25, 0.9); --primary: #f97316; --primary-hover: #ea580c; --text-main: #fff7ed; --text-muted: #fdba74; --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); }
-
-    body {
-      background-color: var(--bg-base); color: var(--text-main); height: 100vh; display: flex;
-      overflow: hidden; position: relative; transition: background var(--transition-smooth), color var(--transition-smooth);
-    }
-
-    body::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--bg-overlay); z-index: -1; pointer-events: none;
-    }
-
+    body { background-color: var(--bg-base); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; position: relative; transition: background var(--transition-smooth), color var(--transition-smooth); }
+    body::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-overlay); z-index: -1; pointer-events: none; }
     #nanobot-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-
-    .glass {
-      background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: var(--border-width) solid var(--glass-border); box-shadow: var(--shadow);
-      border-radius: var(--radius-lg); transition: all var(--transition-smooth);
-    }
-
+    .glass { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: var(--border-width) solid var(--glass-border); box-shadow: var(--shadow); border-radius: var(--radius-lg); transition: all var(--transition-smooth); }
     button, .nav-item, .tool-btn { transition: all var(--transition-fast); border-radius: var(--radius-md); cursor: pointer; border: none; outline: none; }
     button:active, .nav-item:active, .tool-btn:active { transform: scale(0.96) !important; }
     h1, h2, h3 { font-family: var(--font-heading); letter-spacing: 0.5px; }
@@ -98,26 +55,13 @@
     /* ==========================================================================
        AUTHENTICATION OVERLAY (Solid & Readable)
        ========================================================================== */
-    #auth-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.4s ease; opacity: 1; pointer-events: auto;
-    }
+    #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; transition: opacity 0.4s ease; opacity: 1; pointer-events: auto; }
     #auth-overlay.hidden { opacity: 0; pointer-events: none; }
-    
-    .auth-box { 
-      width: 100%; max-width: 420px; padding: 40px; text-align: center; 
-      background: #111815; border: 2px solid var(--primary); border-radius: var(--radius-lg); 
-    }
+    .auth-box { width: 100%; max-width: 400px; padding: 40px; text-align: center; background: #111815; border: 2px solid var(--primary); border-radius: var(--radius-lg); }
     .auth-box h2 { font-size: 32px; margin-bottom: 10px; color: var(--primary); }
     .auth-box p { color: #ffffff; margin-bottom: 30px; font-size: 15px; }
-    .auth-input { 
-      width: 100%; padding: 15px; margin-bottom: 15px; border-radius: var(--radius-md); 
-      border: 1px solid var(--glass-border); background: #1a221e; 
-      color: #ffffff; font-size: 16px; outline: none; 
-    }
+    .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: var(--radius-md); border: 1px solid var(--glass-border); background: #1a221e; color: #ffffff; font-size: 16px; outline: none; }
     .auth-input:focus { border-color: var(--primary); }
-    .auth-row { display: flex; gap: 10px; }
     .auth-submit-btn { width: 100%; padding: 15px; margin-top: 10px; font-size: 18px; }
     .auth-toggle-btn { background: transparent; color: #aaa; margin-top: 15px; text-decoration: underline; font-size: 14px; cursor: pointer; }
 
@@ -125,65 +69,31 @@
        TOASTS (SOLID & HIGH CONTRAST)
        ========================================================================== */
     #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-    .toast {
-      background: #10b981;
-      color: #ffffff;
-      padding: 16px 24px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      font-weight: 700;
-      font-size: 16px;
-      animation: slideInRight 0.3s ease forwards;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border: 2px solid #ffffff;
-      pointer-events: auto;
-      backdrop-filter: none;
-    }
+    .toast { background: #10b981; color: #ffffff; padding: 16px 24px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-weight: 700; font-size: 16px; animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 10px; border: 2px solid #ffffff; pointer-events: auto; backdrop-filter: none; }
     .toast.error { background: #ef4444; }
     @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
     /* ==========================================================================
        SIDEBAR
        ========================================================================== */
-    #sidebar {
-      width: 280px; margin: 16px; display: flex; flex-direction: column; height: calc(100vh - 32px); z-index: 10;
-      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; white-space: nowrap;
-    }
+    #sidebar { width: 280px; margin: 16px; display: flex; flex-direction: column; height: calc(100vh - 32px); z-index: 10; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; white-space: nowrap; }
     #sidebar.collapsed { width: 80px; }
-
     .sidebar-header { padding: 24px; font-size: 32px; font-weight: 800; font-family: var(--font-heading); display: flex; justify-content: space-between; align-items: center;}
     .sidebar-header span { color: var(--primary); }
     .collapse-btn { background: transparent; color: var(--text-main); font-size: 20px; padding: 5px; }
-    
-    .new-chat-btn {
-      margin: 0 16px 16px 16px; padding: 14px; background: var(--primary); color: #fff;
-      font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;
-      font-size: 16px; box-shadow: var(--shadow); overflow: hidden;
-    }
+    .new-chat-btn { margin: 0 16px 16px 16px; padding: 14px; background: var(--primary); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; box-shadow: var(--shadow); overflow: hidden; }
     #sidebar.collapsed .new-chat-btn { padding: 14px 0; margin: 0 10px 16px 10px; }
     #sidebar.collapsed .new-chat-btn span { display: none; }
-
     .nav-menu { padding: 0 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; overflow-x: hidden; }
-    .nav-item {
-      padding: 14px 18px; color: var(--text-main); opacity: 0.8; font-size: 16px; font-weight: 600;
-      display: flex; align-items: center; gap: 12px; border: var(--border-width) solid transparent;
-    }
+    .nav-item { padding: 14px 18px; color: var(--text-main); opacity: 0.8; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 12px; border: var(--border-width) solid transparent; }
     .nav-item:hover { background: var(--glass-hover); opacity: 1; transform: translateX(4px); }
     .nav-item.active { background: var(--primary); color: #fff; border-color: var(--glass-border); opacity: 1; }
     #sidebar.collapsed .nav-item { padding: 14px 0; justify-content: center; }
     #sidebar.collapsed .nav-item span { display: none; }
-
     .theme-switcher { padding: 16px; border-top: var(--border-width) solid var(--glass-border); display: flex; flex-wrap: wrap; gap: 8px; }
     .theme-btn { flex: 1; min-width: 30px; padding: 10px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); font-size: 16px; display: flex; justify-content: center; }
-
     .sidebar-footer { padding: 16px; border-top: var(--border-width) solid var(--glass-border); display: flex; align-items: center; gap: 12px; overflow: hidden;}
-    .avatar {
-      width: 46px; height: 46px; border-radius: 50%; background: var(--primary); color: #fff;
-      border: var(--border-width) solid var(--glass-border); display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 20px; flex-shrink: 0;
-    }
+    .avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--primary); color: #fff; border: var(--border-width) solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; flex-shrink: 0; }
     #logout-btn { margin-left: auto; background: transparent; color: #ef4444; font-size: 20px; cursor: pointer; padding: 5px; }
     #sidebar.collapsed .sidebar-footer { justify-content: center; padding: 16px 0; }
     #sidebar.collapsed .sidebar-footer div, #sidebar.collapsed #logout-btn { display: none; }
@@ -344,29 +254,13 @@
   <div id="auth-overlay">
     <div class="auth-box glass">
       <h2 id="auth-title">Student Login</h2>
-      <p id="auth-subtitle">Enter your details to access your workspace.</p>
+      <p id="auth-subtitle">Enter your username and password to access your workspace.</p>
       
-      <input type="text" id="auth-name" class="auth-input" placeholder="Full Name (e.g. Rahul)">
-      <div class="auth-row">
-        <select id="auth-class" class="auth-input">
-          <option value="" disabled selected>Class</option>
-          <option value="6">Class 6</option>
-          <option value="7">Class 7</option>
-          <option value="8">Class 8</option>
-          <option value="9">Class 9</option>
-          <option value="10">Class 10</option>
-        </select>
-        <select id="auth-section" class="auth-input">
-          <option value="" disabled selected>Section</option>
-          <option value="A">Section A</option>
-          <option value="B">Section B</option>
-          <option value="C">Section C</option>
-          <option value="D">Section D</option>
-        </select>
-      </div>
+      <input type="text" id="auth-name" class="auth-input" placeholder="Username (e.g. rahul123)">
+      <input type="password" id="auth-password" class="auth-input" placeholder="Password (e.g. 123456)">
       
-      <button id="auth-submit-btn" class="btn btn-primary auth-submit-btn">Enter Workspace</button>
-      <button id="auth-toggle-btn" class="auth-toggle-btn">Switch to Sign Up</button>
+      <button id="auth-submit-btn" class="btn btn-primary auth-submit-btn">Login</button>
+      <button id="auth-toggle-btn" class="auth-toggle-btn">Don't have an account? Sign Up</button>
     </div>
   </div>
 
@@ -634,39 +528,42 @@
       }
 
       // ========================================================================
-      // 3. AUTHENTICATION (Name, Class, Section -> Dummy Email)
+      // 3. AUTHENTICATION (Username & Password Only)
       // ========================================================================
       let isLoginMode = true;
       const authOverlay = document.getElementById('auth-overlay');
       const authTitle = document.getElementById('auth-title');
+      const authSubtitle = document.getElementById('auth-subtitle');
       const authToggleBtn = document.getElementById('auth-toggle-btn');
 
       authToggleBtn.addEventListener('click', () => {
         isLoginMode = !isLoginMode;
         authTitle.innerText = isLoginMode ? "Student Login" : "Create Account";
-        document.getElementById('auth-submit-btn').innerText = isLoginMode ? "Enter Workspace" : "Sign Up";
-        authToggleBtn.innerText = isLoginMode ? "Switch to Sign Up" : "Switch to Login";
+        authSubtitle.innerText = isLoginMode ? "Enter your username and password to access." : "Choose a username and password to sign up.";
+        document.getElementById('auth-submit-btn').innerText = isLoginMode ? "Login" : "Sign Up";
+        authToggleBtn.innerText = isLoginMode ? "Don't have an account? Sign Up" : "Already have an account? Login";
       });
 
       document.getElementById('auth-submit-btn').addEventListener('click', async () => {
         const name = document.getElementById('auth-name').value.trim();
-        const cls = document.getElementById('auth-class').value;
-        const sec = document.getElementById('auth-section').value;
+        const password = document.getElementById('auth-password').value.trim();
 
-        if (!name || !cls || !sec) return showToast("Please fill Name, Class, and Section", true);
+        if (!name || !password) return showToast("Please enter both Username and Password", true);
 
+        // Hide the email from the user. Generate a fake one behind the scenes.
         const safeName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const dummyEmail = `${safeName}_${cls}_${sec}@novastudent.com`;
-        const dummyPassword = `pass_${safeName}_${cls}${sec}`;
+        const dummyEmail = `${safeName}@novaapp.com`;
+        // Append a secret suffix to satisfy Supabase's 6-character minimum requirement
+        const dummyPassword = `${password}NovaSecret123!`; 
 
         const btn = document.getElementById('auth-submit-btn');
-        btn.innerText = "Connecting...";
+        btn.innerText = "Processing...";
 
         if (isLoginMode) {
           const { error } = await supabase.auth.signInWithPassword({ email: dummyEmail, password: dummyPassword });
           if (error) {
-            showToast("Student not found. Please Sign Up first.", true);
-            btn.innerText = "Enter Workspace";
+            showToast("Invalid username or password.", true);
+            btn.innerText = "Login";
           }
         } else {
           const { data, error } = await supabase.auth.signUp({ email: dummyEmail, password: dummyPassword });
@@ -705,7 +602,7 @@
         let { data: profile, error: profErr } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
         if (profErr) console.warn("Profile fetch error:", profErr);
         if (!profile) {
-          const rawName = currentUser.email.split('@')[0].split('_')[0];
+          const rawName = currentUser.email.split('@')[0];
           const { data, error } = await supabase.from('profiles').insert([{ id: currentUser.id, name: rawName, xp: 0 }]).select().single();
           if (error) console.error("Profile insert error:", error);
           profile = data;
@@ -755,7 +652,7 @@
       }
 
       // ========================================================================
-      // 6. TASKS (Cloud Sync with Error Logging)
+      // 6. TASKS
       // ========================================================================
       function renderTasks() {
         const list = document.getElementById('task-list');
@@ -1032,7 +929,7 @@
       });
 
       // ========================================================================
-      // 9. PLANNER (Cloud Sync with Error Logging)
+      // 9. PLANNER
       // ========================================================================
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
       const timeSlots = ["08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00"];
