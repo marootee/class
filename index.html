@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Forces mobile browsers to respect device width and prevents zooming -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Nova AI - Ultimate Workspace</title>
 
   <!-- Core Libraries -->
@@ -37,37 +38,30 @@
       --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* NEW: Official Theme */
-    body.theme-official {
-      --bg-base: #f8fafc; --bg-overlay: transparent; --glass-bg: #ffffff; 
-      --glass-border: #e2e8f0; --glass-hover: #f1f5f9; --primary: #3b82f6; 
-      --primary-hover: #2563eb; --text-main: #0f172a; --text-muted: #64748b; 
-      --border-width: 1px; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    }
-
+    body.theme-official { --bg-base: #f8fafc; --bg-overlay: transparent; --glass-bg: #ffffff; --glass-border: #e2e8f0; --glass-hover: #f1f5f9; --primary: #3b82f6; --primary-hover: #2563eb; --text-main: #0f172a; --text-muted: #64748b; --border-width: 1px; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
     body.theme-doodle { --bg-base: #fdfbf7; --bg-overlay: transparent; --glass-bg: #ffffff; --glass-border: #2c2c2c; --glass-hover: #f0f0f0; --primary: #ff4d4d; --primary-hover: #ff3333; --text-main: #2c2c2c; --text-muted: #666666; --border-width: 2px; --radius-lg: 255px 15px 225px 15px/15px 225px 15px 255px; --radius-md: 15px 255px 15px 225px/225px 15px 255px 15px; --shadow: 4px 4px 0px #2c2c2c; --font: 'Caveat', cursive; --font-heading: 'Caveat', cursive; }
     body.theme-cartoon { --bg-base: #ffde59; --bg-overlay: transparent; --glass-bg: #ffffff; --glass-border: #000000; --glass-hover: #ffeaa7; --primary: #00a8ff; --primary-hover: #0097e6; --text-main: #000000; --text-muted: #333333; --border-width: 4px; --radius-lg: 20px; --radius-md: 12px; --shadow: 6px 6px 0px #000; --font: 'Outfit', sans-serif; --font-heading: 'Bangers', cursive; }
     body.theme-cyberpunk { --bg-base: #050014; --bg-overlay: rgba(5, 0, 20, 0.85); --glass-bg: rgba(20, 0, 50, 0.8); --glass-border: #ff00ff; --glass-hover: rgba(40, 0, 100, 0.9); --primary: #00ffff; --primary-hover: #00cccc; --text-main: #ffffff; --text-muted: #ff00ff; --border-width: 2px; --shadow: 0 0 15px #ff00ff; }
     body.theme-ocean { --bg-base: #021a30; --bg-overlay: rgba(2, 26, 48, 0.8); --glass-bg: rgba(4, 40, 70, 0.8); --glass-border: rgba(6, 182, 212, 0.4); --glass-hover: rgba(8, 60, 100, 0.9); --primary: #06b6d4; --primary-hover: #0891b2; --text-main: #ecfeff; --text-muted: #67e8f9; --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6); }
     body.theme-sunset { --bg-base: #1c0808; --bg-overlay: rgba(28, 8, 8, 0.8); --glass-bg: rgba(50, 15, 15, 0.8); --glass-border: rgba(249, 115, 22, 0.4); --glass-hover: rgba(80, 25, 25, 0.9); --primary: #f97316; --primary-hover: #ea580c; --text-main: #fff7ed; --text-muted: #fdba74; --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6); }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-base); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; position: relative; transition: background var(--transition-smooth), color var(--transition-smooth); }
     body::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-overlay); z-index: -1; pointer-events: none; }
     #nanobot-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    
     .glass { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: var(--border-width) solid var(--glass-border); box-shadow: var(--shadow); border-radius: var(--radius-lg); transition: all var(--transition-smooth); }
     button, .nav-item, .tool-btn { transition: all var(--transition-fast); border-radius: var(--radius-md); cursor: pointer; border: none; outline: none; }
     button:active, .nav-item:active, .tool-btn:active { transform: scale(0.96) !important; }
     h1, h2, h3 { font-family: var(--font-heading); letter-spacing: 0.5px; }
 
     /* ==========================================================================
-       AUTHENTICATION OVERLAY (Super Easy for Students)
+       AUTHENTICATION & MODALS
        ========================================================================== */
-    #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; transition: opacity 0.4s ease; opacity: 1; pointer-events: auto; }
+    #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; transition: opacity 0.4s ease; opacity: 1; pointer-events: auto; padding: 20px; }
     #auth-overlay.hidden { opacity: 0; pointer-events: none; }
     .auth-box { width: 100%; max-width: 400px; padding: 40px 30px; text-align: center; background: #111815; border: 2px solid var(--primary); border-radius: var(--radius-lg); box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
     .auth-box h2 { font-size: 32px; margin-bottom: 10px; color: var(--primary); }
-    .auth-box p { color: #cbd5e1; margin-bottom: 20px; font-size: 15px; }
     .auth-steps { text-align: left; background: #1a221e; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; color: #94a3b8; border: 1px solid #334155; }
     .auth-steps b { color: #fff; }
     .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: var(--radius-md); border: 1px solid var(--glass-border); background: #1a221e; color: #ffffff; font-size: 16px; outline: none; }
@@ -75,53 +69,39 @@
     .auth-submit-btn { width: 100%; padding: 15px; margin-top: 10px; font-size: 18px; }
     .auth-toggle-btn { background: transparent; color: #aaa; margin-top: 15px; text-decoration: underline; font-size: 14px; cursor: pointer; }
 
-    /* ==========================================================================
-       TOASTS
-       ========================================================================== */
+    #profile-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9000; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 20px; }
+    #profile-modal.active { display: flex; }
+    .profile-box { background: var(--bg-base); width: 100%; max-width: 400px; padding: 30px; border-radius: var(--radius-lg); border: 2px solid var(--primary); box-shadow: var(--shadow); text-align: center; }
+    .emoji-picker { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
+    .emoji-option { font-size: 28px; padding: 10px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; background: var(--glass-bg); }
+    .emoji-option.selected { border-color: var(--primary); background: var(--glass-hover); }
+    .profile-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+
+    /* TOASTS */
     #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
     .toast { background: #10b981; color: #ffffff; padding: 16px 24px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-weight: 700; font-size: 16px; animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 10px; border: 2px solid #ffffff; pointer-events: auto; }
     .toast.error { background: #ef4444; }
     @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
     /* ==========================================================================
-       PROFILE MODAL
+       SIDEBAR (DESKTOP ONLY)
        ========================================================================== */
-    #profile-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9000; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-    #profile-modal.active { display: flex; }
-    .profile-box { background: var(--bg-base); width: 100%; max-width: 400px; padding: 30px; border-radius: var(--radius-lg); border: 2px solid var(--primary); box-shadow: var(--shadow); text-align: center; }
-    .profile-box h2 { margin-bottom: 20px; color: var(--primary); }
-    .emoji-picker { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
-    .emoji-option { font-size: 28px; padding: 10px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; background: var(--glass-bg); }
-    .emoji-option:hover { background: var(--glass-hover); }
-    .emoji-option.selected { border-color: var(--primary); background: var(--glass-hover); }
-    .profile-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-
-    /* ==========================================================================
-       SIDEBAR
-       ========================================================================== */
-    #sidebar { width: 280px; margin: 16px; display: flex; flex-direction: column; height: calc(100vh - 32px); z-index: 10; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; white-space: nowrap; }
+    #sidebar { width: 280px; margin: 16px; display: flex; flex-direction: column; height: calc(100vh - 32px); z-index: 10; transition: width 0.3s; overflow: hidden; white-space: nowrap; }
     #sidebar.collapsed { width: 80px; }
     .sidebar-header { padding: 24px; font-size: 32px; font-weight: 800; font-family: var(--font-heading); display: flex; justify-content: space-between; align-items: center;}
     .sidebar-header span { color: var(--primary); }
     .collapse-btn { background: transparent; color: var(--text-main); font-size: 20px; padding: 5px; }
     .new-chat-btn { margin: 0 16px 16px 16px; padding: 14px; background: var(--primary); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; box-shadow: var(--shadow); overflow: hidden; }
-    #sidebar.collapsed .new-chat-btn { padding: 14px 0; margin: 0 10px 16px 10px; }
     #sidebar.collapsed .new-chat-btn span { display: none; }
     .nav-menu { padding: 0 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; overflow-x: hidden; }
     .nav-item { padding: 14px 18px; color: var(--text-main); opacity: 0.8; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 12px; border: var(--border-width) solid transparent; }
-    .nav-item:hover { background: var(--glass-hover); opacity: 1; transform: translateX(4px); }
-    .nav-item.active { background: var(--primary); color: #fff; border-color: var(--glass-border); opacity: 1; }
+    .nav-item:hover, .nav-item.active { background: var(--primary); color: #fff; opacity: 1; }
     #sidebar.collapsed .nav-item { padding: 14px 0; justify-content: center; }
     #sidebar.collapsed .nav-item span { display: none; }
-    
     .theme-switcher { padding: 16px; border-top: var(--border-width) solid var(--glass-border); display: flex; flex-wrap: wrap; gap: 8px; }
     .theme-btn { flex: 1; min-width: 30px; padding: 10px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); font-size: 16px; display: flex; justify-content: center; }
-
-    /* Clickable Profile Footer */
-    .sidebar-footer { padding: 16px; border-top: var(--border-width) solid var(--glass-border); display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; }
-    .sidebar-footer:hover { background: var(--glass-hover); }
+    .sidebar-footer { padding: 16px; border-top: var(--border-width) solid var(--glass-border); display: flex; align-items: center; gap: 12px; cursor: pointer; }
     .avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
-    #sidebar.collapsed .sidebar-footer { justify-content: center; padding: 16px 0; }
     #sidebar.collapsed .sidebar-footer div { display: none; }
 
     /* ==========================================================================
@@ -132,171 +112,161 @@
     .screen.active { display: flex; animation: fadeSlideIn var(--transition-smooth) forwards; }
     @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Mobile Back Button (Hidden on Desktop) */
+    .mobile-back-btn { display: none; }
+
+    /* Core UI Elements */
     .dash-header { font-size: 36px; margin-bottom: 24px; }
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
     .stat-card { padding: 24px; }
     .stat-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); }
     .stat-value { font-size: 42px; font-weight: 800; color: var(--primary); }
-
     .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .tool-card { padding: 24px; }
-    .tool-card h3 { margin-bottom: 16px; font-size: 24px; }
-
-    .timer-display { font-size: 72px; font-weight: 800; font-variant-numeric: tabular-nums; margin-bottom: 20px; text-align: center; }
-    .timer-controls { display: flex; gap: 12px; justify-content: center; }
-    
+    .timer-display { font-size: 72px; font-weight: 800; text-align: center; margin-bottom: 20px; }
     .btn { padding: 12px 24px; border: var(--border-width) solid var(--glass-border); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; box-shadow: var(--shadow); }
     .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
     .btn-secondary { background: var(--glass-bg); color: var(--text-main); }
-
     .task-input-row { display: flex; gap: 10px; margin-bottom: 16px; }
-    .task-input-row input { flex: 1; padding: 14px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); outline: none; font-size: 16px; box-shadow: var(--shadow); border-radius: var(--radius-md); }
+    .task-input-row input { flex: 1; padding: 14px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); outline: none; font-size: 16px; border-radius: var(--radius-md); }
     .task-list { display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; }
     .task-item { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); }
-    .task-item input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary); }
+    .task-item input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); }
     .task-item span { flex: 1; font-size: 16px; font-weight: 500; }
     .task-item.completed span { text-decoration: line-through; opacity: 0.5; }
-    .task-item button { background: none; border: none; color: #ef4444; font-size: 20px; font-weight: bold; cursor: pointer;}
+    .task-item button { background: none; border: none; color: #ef4444; font-size: 20px; cursor: pointer;}
 
     /* AI STUDIO */
     #studio-screen { padding: 0; overflow: hidden; }
     .top-bar { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: var(--border-width) solid var(--glass-border); background: var(--glass-bg); }
-    .model-badge { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; }
-    .model-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 8px var(--primary); }
-
     #chat-container { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; }
     .chat-inner { max-width: 850px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 24px; }
-    .message { display: flex; gap: 16px; animation: fadeSlideIn 0.3s ease; }
-    .msg-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 24px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); }
+    .message { display: flex; gap: 16px; }
+    .msg-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); }
     .msg-icon.ai { background: var(--primary); color: #fff; }
-    .msg-content { flex: 1; font-size: 17px; line-height: 1.7; background: var(--glass-bg); padding: 18px 24px; border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--shadow); font-weight: 500; }
-
-    .code-block { background: #1e1e1e; border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); margin: 16px 0; overflow: hidden; color: #d4d4d4;}
-    .code-header { background: #2d2d2d; padding: 10px 16px; display: flex; justify-content: space-between; font-size: 14px; color: #a3a3a3; border-bottom: 1px solid #444; }
-    .code-header button { background: transparent; border: 1px solid #555; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
-    .code-block pre { padding: 16px; overflow-x: auto; font-family: var(--code-font); font-size: 15px; }
-
+    .msg-content { flex: 1; font-size: 17px; line-height: 1.7; background: var(--glass-bg); padding: 18px 24px; border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); }
     .input-wrapper { padding: 20px 30px; background: var(--glass-bg); border-top: var(--border-width) solid var(--glass-border); }
-    .input-container { max-width: 850px; margin: 0 auto; background: var(--bg-base); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 10px; box-shadow: var(--shadow); }
+    .input-container { max-width: 850px; margin: 0 auto; background: var(--bg-base); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 10px; }
     .input-tools { display: flex; gap: 8px; padding: 4px 8px 8px 8px; }
     .tool-btn { background: transparent; border: var(--border-width) solid transparent; color: var(--text-main); padding: 8px 14px; font-size: 15px; font-weight: 600; opacity: 0.7; }
-    .tool-btn:hover { opacity: 1; background: var(--glass-hover); }
-    .tool-btn.active { opacity: 1; background: var(--primary); color: #fff; border-color: var(--glass-border); }
-
+    .tool-btn.active { background: var(--primary); color: #fff; }
     .input-row { display: flex; align-items: flex-end; gap: 10px; padding: 4px; }
-    textarea { flex: 1; background: transparent; border: none; color: var(--text-main); font-size: 17px; padding: 12px; outline: none; resize: none; max-height: 200px; min-height: 50px; font-weight: 500; }
-    .send-btn { width: 48px; height: 48px; border: var(--border-width) solid var(--glass-border); background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); box-shadow: var(--shadow); }
+    textarea { flex: 1; background: transparent; border: none; color: var(--text-main); font-size: 17px; padding: 12px; outline: none; resize: none; min-height: 50px; }
+    .send-btn { width: 48px; height: 48px; background: var(--primary); color: #fff; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
-    /* QUIZ */
-    #quiz-screen { padding: 30px; }
+    /* QUIZ & PLANNER */
     .quiz-header { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
     .quiz-header select, .quiz-header input { padding: 12px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); font-size: 16px; border-radius: var(--radius-md); outline: none; flex: 1; min-width: 200px; }
-    .quiz-btn-group { display: flex; gap: 10px; width: 100%; margin-bottom: 30px; }
-    .question-card { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 15px; }
-    .question-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; }
     .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .option-label { display: flex; align-items: center; gap: 10px; padding: 10px; border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); cursor: pointer; transition: 0.2s; background: rgba(0,0,0,0.1); }
-    .option-label:hover { background: var(--glass-hover); }
-    .option-label input { width: 18px; height: 18px; accent-color: var(--primary); }
-    .option-label.correct { border-color: #10b981; background: rgba(16, 185, 129, 0.2); }
-    .option-label.incorrect { border-color: #ef4444; background: rgba(239, 68, 68, 0.2); }
-    .worksheet-area { width: 100%; min-height: 400px; padding: 20px; background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); color: var(--text-main); font-size: 16px; line-height: 1.8; }
-
-    /* MOTIVATION, PLANNER, MUSIC, SYLLABUS, FLASHCARDS */
-    .motivation-grid { display: flex; flex-direction: column; gap: 40px; max-width: 1000px; margin: 0 auto; padding-bottom: 40px; }
-    .motivation-quote-cloud { position: relative; height: 600px; border-radius: var(--radius-lg); overflow: hidden; background-image: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1000&auto=format&fit=crop'); background-size: cover; background-position: center; border: var(--border-width) solid var(--glass-border); box-shadow: var(--shadow); }
-    .motivation-quote-cloud::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1; }
-    .q-cloud-text { position: absolute; z-index: 2; color: #fff; font-family: 'Outfit', sans-serif; font-weight: 700; text-shadow: 2px 2px 4px #000; }
-    .q-cloud-text:nth-child(1) { top: 10%; left: 10%; font-size: 22px; transform: rotate(-5deg); }
-    .q-cloud-text:nth-child(2) { top: 15%; right: 10%; font-size: 18px; text-align: right; transform: rotate(3deg); }
-    .q-cloud-text:nth-child(3) { top: 40%; left: 15%; font-size: 26px; font-style: italic; transform: rotate(-10deg); color: #fbbf24; }
-    .q-cloud-text:nth-child(4) { top: 60%; right: 15%; font-size: 20px; transform: rotate(5deg); }
-    .q-cloud-text:nth-child(5) { bottom: 10%; left: 20%; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
-    .q-cloud-text:nth-child(6) { bottom: 20%; right: 10%; font-size: 16px; text-align: right; transform: rotate(-3deg); }
-    .motivation-collage { position: relative; height: 500px; border-radius: var(--radius-lg); overflow: hidden; display: flex; align-items: center; justify-content: center; border: var(--border-width) solid var(--glass-border); box-shadow: var(--shadow); }
-    .motivation-collage img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2); z-index: 1; }
-    .collage-title { position: relative; z-index: 2; font-family: 'Oswald', sans-serif; font-size: 80px; color: #fff; letter-spacing: 10px; text-transform: uppercase; border-top: 4px solid #fff; border-bottom: 4px solid #fff; padding: 10px 30px; text-shadow: 0 0 20px rgba(0,0,0,0.8); }
-
+    .question-card { background: var(--glass-bg); padding: 20px; border-radius: var(--radius-md); margin-bottom: 15px; border: var(--border-width) solid var(--glass-border); }
+    
     .planner-container { overflow-x: auto; margin-top: 20px; padding-bottom: 20px; }
     .planner-grid { display: grid; grid-template-columns: 140px repeat(7, 1fr); gap: 8px; min-width: 1000px; }
     .planner-header { background: var(--primary); color: #fff; padding: 16px; text-align: center; font-weight: 700; border-radius: var(--radius-md); }
-    .time-slot { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); padding: 12px; text-align: center; font-weight: 600; font-size: 14px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
-    .planner-cell { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); min-height: 100px; padding: 10px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; gap: 8px; }
-    .planner-cell:hover { background: var(--glass-hover); border-color: var(--primary); }
-    .planner-task { background: var(--primary); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
-    .planner-task button { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; }
+    .planner-cell { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); min-height: 100px; padding: 10px; cursor: pointer; }
+    .planner-task { background: var(--primary); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 13px; margin-bottom: 5px; display: flex; justify-content: space-between; }
 
     .music-search-row { display: flex; gap: 10px; margin-bottom: 24px; }
-    .music-search-row input { flex: 1; padding: 14px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); outline: none; font-size: 16px; box-shadow: var(--shadow); border-radius: var(--radius-md); }
-    .music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 15px; }
-    .music-card { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 15px; text-align: center; box-shadow: var(--shadow); transition: transform 0.2s; }
-    .music-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-    .music-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 12px; }
-    .music-card h4 { font-size: 16px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .music-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .music-card audio { width: 100%; height: 36px; border-radius: 20px; outline: none; }
+    .music-search-row input { flex: 1; padding: 14px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); outline: none; border-radius: var(--radius-md); }
+    .music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+    .music-card { background: var(--glass-bg); padding: 15px; border-radius: var(--radius-lg); text-align: center; border: var(--border-width) solid var(--glass-border); }
+    .music-card img { width: 100%; border-radius: var(--radius-md); margin-bottom: 10px; }
+    .music-card audio { width: 100%; height: 36px; margin-top: 10px; }
 
-    .syllabus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 20px; padding-bottom: 40px; }
-    .syllabus-card { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); }
-    .syllabus-card h3 { margin-bottom: 8px; font-size: 24px; color: var(--primary); }
-    .syllabus-card .book-name { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; display: block; font-weight: 600; }
+    .syllabus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+    .syllabus-card { background: var(--glass-bg); padding: 24px; border-radius: var(--radius-lg); border: var(--border-width) solid var(--glass-border); }
     .syllabus-card ul { list-style: none; padding: 0; }
-    .syllabus-card li { padding: 10px 0; border-bottom: 1px solid var(--glass-border); font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
-    .syllabus-card li:last-child { border-bottom: none; }
-    .syllabus-card li input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
-    .progress-container { width: 100%; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 16px; height: 10px; overflow: hidden; }
-    .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.4s ease; border-radius: 10px; }
+    .syllabus-card li { padding: 10px 0; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 10px; }
 
-    .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; padding-bottom: 40px; }
-    .flashcard { background-color: transparent; height: 220px; perspective: 1000px; cursor: pointer; }
-    .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+    .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .flashcard { height: 220px; perspective: 1000px; cursor: pointer; }
+    .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
     .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-    .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: var(--radius-lg); padding: 24px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; border: var(--border-width) solid var(--glass-border); box-shadow: var(--shadow); }
-    .flashcard-front { background: var(--glass-bg); color: var(--text-main); }
+    .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: var(--radius-lg); padding: 24px; display: flex; align-items: center; justify-content: center; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); }
     .flashcard-back { background: var(--primary); color: #fff; transform: rotateY(180deg); }
 
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 16px; }
-    .form-group input { width: 100%; padding: 14px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); outline: none; font-size: 16px; box-shadow: var(--shadow); border-radius: var(--radius-md); }
-    
-    .typing-dots span { display: inline-block; width: 8px; height: 8px; background: var(--primary); border-radius: 50%; margin-right: 6px; animation: bounce 1.4s infinite ease-in-out both; }
-    .typing-dots span:nth-child(1) { animation-delay: -0.32s; } .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
-    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
+    .typing-dots span { display: inline-block; width: 8px; height: 8px; background: var(--primary); border-radius: 50%; margin-right: 6px; animation: bounce 1.4s infinite both; }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
     /* ==========================================================================
-       MOBILE RESPONSIVENESS (Thin Borders)
+       MOBILE RESPONSIVENESS (The Magic)
        ========================================================================== */
-    @media (max-width: 900px) {
-      :root { --border-width: 0.5px; --radius-lg: 12px; --radius-md: 8px; }
-      #sidebar { width: 80px; margin: 8px; height: calc(100vh - 16px); }
-      #sidebar .new-chat-btn span, #sidebar .nav-item span, #sidebar .sidebar-footer div { display: none; }
-      #sidebar .nav-item { justify-content: center; padding: 14px 0; }
+    @media (max-width: 768px) {
+      /* Variables for Mobile */
+      :root { --border-width: 1px; --radius-lg: 15px; --radius-md: 10px; }
+      
+      /* Hide Sidebar completely */
+      #sidebar { display: none !important; }
+      
+      /* Main Layout */
+      body { flex-direction: column; }
+      #main-content { padding: 0; height: 100vh; }
+      
+      /* Full Screen Screens */
+      .screen { 
+        position: fixed; 
+        top: 0; left: 0; 
+        width: 100vw; height: 100vh; 
+        z-index: 1000; 
+        background: var(--bg-base); 
+        padding: 70px 15px 20px 15px; /* Padding for top button */
+        border-radius: 0; 
+        border: none;
+        overflow-y: auto;
+        display: none; /* Hidden by default */
+      }
+      
+      /* Active Screen takes full space */
+      .screen.active { display: flex; }
+
+      /* Back Button for Mobile */
+      .mobile-back-btn {
+        display: flex; align-items: center; justify-content: center;
+        position: fixed; top: 15px; left: 15px;
+        padding: 10px 18px;
+        background: var(--primary); color: #fff;
+        border-radius: 30px; font-weight: 700; font-size: 15px;
+        z-index: 1100; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        cursor: pointer;
+      }
+
+      /* Adjust Grids and Layouts for Mobile */
       .tools-grid { grid-template-columns: 1fr; }
-      #main-content { padding: 8px 8px 8px 0; }
       .options-grid { grid-template-columns: 1fr; }
-      .screen { padding: 20px 15px; }
-      .auth-box { padding: 30px 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-value { font-size: 28px; }
+      .dash-header { font-size: 24px; margin-top: 10px; margin-bottom: 15px; }
+      
+      /* AI Studio Mobile */
+      #studio-screen { padding: 0; }
+      #studio-screen .top-bar { display: none; } /* Hide desktop top bar */
+      #chat-container { padding: 70px 15px 120px 15px; } /* Space for input */
+      .msg-content { font-size: 15px; padding: 14px 18px; }
+      .input-wrapper { padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10; }
+      
+      /* Planner Mobile (Only the grid scrolls horizontally, not the page) */
+      .planner-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .planner-grid { min-width: 800px; }
+      
+      /* Modals */
+      .auth-box, .profile-box { padding: 25px 20px; }
+      #auth-overlay { padding: 15px; }
     }
   </style>
 </head>
-<body class="theme-natural">
+<body class="theme-official">
 
   <!-- AUTH OVERLAY -->
   <div id="auth-overlay">
     <div class="auth-box glass">
       <h2 id="auth-title">Student Login</h2>
-      
-      <!-- Simple Steps for Students -->
       <div class="auth-steps">
-        <div>Step 1: Type a cool username (e.g. <b>rahul_8A</b>)</div>
-        <div>Step 2: Type a secret password</div>
-        <div>Step 3: Click <b>Sign Up</b> (or Login if new)</div>
+        <div>Step 1: Type a username (e.g. <b>rahul_8A</b>)</div>
+        <div>Step 2: Type a password</div>
+        <div>Step 3: Click <b>Sign Up</b> (or Login if existing)</div>
       </div>
-
       <input type="text" id="auth-name" class="auth-input" placeholder="Username">
       <input type="password" id="auth-password" class="auth-input" placeholder="Password">
-      
       <button id="auth-submit-btn" class="btn btn-primary auth-submit-btn">Login</button>
       <button id="auth-toggle-btn" class="auth-toggle-btn">Don't have an account? Sign Up</button>
     </div>
@@ -307,13 +277,11 @@
     <div class="profile-box glass">
       <h2>Your Profile</h2>
       <div style="font-size: 60px; margin-bottom: 10px;" id="profile-display-avatar">🦊</div>
-      
       <div class="form-group" style="text-align: left;">
         <label>Your Name</label>
-        <input type="text" id="profile-name-input" placeholder="Enter your name">
+        <input type="text" id="profile-name-input" class="auth-input" placeholder="Enter your name">
       </div>
-
-      <div style="text-align: left; margin-bottom: 10px; font-weight: 600;">Choose Character Emoji:</div>
+      <div style="text-align: left; margin-bottom: 10px; font-weight: 600;">Choose Emoji:</div>
       <div class="emoji-picker">
         <div class="emoji-option" data-emoji="🦊">🦊</div>
         <div class="emoji-option" data-emoji="🚀">🚀</div>
@@ -324,7 +292,6 @@
         <div class="emoji-option" data-emoji="🦁">🦁</div>
         <div class="emoji-option" data-emoji="⚡">⚡</div>
       </div>
-
       <div class="profile-actions">
         <button class="btn btn-primary" id="save-profile-btn">Save Changes</button>
         <button class="btn btn-secondary" id="modal-close-btn">Close</button>
@@ -333,28 +300,29 @@
     </div>
   </div>
 
+  <!-- MOBILE BACK BUTTON (Appears only on Mobile) -->
+  <div class="mobile-back-btn" id="mobile-back-btn">← Back</div>
+
   <canvas id="nanobot-canvas"></canvas>
   <div id="toast-container"></div>
 
+  <!-- SIDEBAR (Desktop Only) -->
   <aside id="sidebar" class="glass">
     <div class="sidebar-header">
       <div>Nova<span>.AI</span></div>
       <button class="collapse-btn" id="sidebar-toggle">☰</button>
     </div>
     <button class="new-chat-btn" id="new-chat-btn">+ <span>New Chat</span></button>
-
     <div class="nav-menu">
-      <div class="nav-item active" data-target="dashboard-screen">🏠 <span>Dashboard</span></div>
-      <div class="nav-item" data-target="studio-screen">💬 <span>AI Studio</span></div>
-      <div class="nav-item" data-target="quiz-screen">📝 <span>Quizzes & Worksheets</span></div>
-      <div class="nav-item" data-target="motivation-screen">🔥 <span>Motivation</span></div>
-      <div class="nav-item" data-target="planner-screen">📅 <span>Study Planner</span></div>
-      <div class="nav-item" data-target="music-screen">🎵 <span>Music Studio</span></div>
-      <div class="nav-item" data-target="syllabus-screen">📚 <span>Syllabus Hub</span></div>
-      <div class="nav-item" data-target="flashcard-screen">🃏 <span>Flashcards</span></div>
-      <div class="nav-item" data-target="settings-screen">⚙️ <span>Settings</span></div>
+      <div class="nav-item active" data-target="dashboard-screen" onclick="switchScreen('dashboard-screen', this)">🏠 <span>Dashboard</span></div>
+      <div class="nav-item" data-target="studio-screen" onclick="switchScreen('studio-screen', this)">💬 <span>AI Studio</span></div>
+      <div class="nav-item" data-target="quiz-screen" onclick="switchScreen('quiz-screen', this)">📝 <span>Quizzes</span></div>
+      <div class="nav-item" data-target="motivation-screen" onclick="switchScreen('motivation-screen', this)">🔥 <span>Motivation</span></div>
+      <div class="nav-item" data-target="planner-screen" onclick="switchScreen('planner-screen', this)">📅 <span>Planner</span></div>
+      <div class="nav-item" data-target="music-screen" onclick="switchScreen('music-screen', this)">🎵 <span>Music</span></div>
+      <div class="nav-item" data-target="syllabus-screen" onclick="switchScreen('syllabus-screen', this)">📚 <span>Syllabus</span></div>
+      <div class="nav-item" data-target="flashcard-screen" onclick="switchScreen('flashcard-screen', this)">🃏 <span>Flashcards</span></div>
     </div>
-
     <div class="theme-switcher">
       <button class="theme-btn" data-theme="theme-official" title="Official">💼</button>
       <button class="theme-btn" data-theme="theme-natural" title="Natural">🌿</button>
@@ -364,9 +332,7 @@
       <button class="theme-btn" data-theme="theme-ocean" title="Ocean">🌊</button>
       <button class="theme-btn" data-theme="theme-sunset" title="Sunset">🌅</button>
     </div>
-
-    <!-- CLICKABLE PROFILE FOOTER -->
-    <div class="sidebar-footer" id="open-profile-btn">
+    <div class="sidebar-footer" onclick="document.getElementById('profile-modal').classList.add('active')">
       <div class="avatar" id="sidebar-avatar">🦊</div>
       <div style="flex: 1; overflow: hidden;">
         <div style="font-size: 16px; font-weight: 700; white-space: nowrap; text-overflow: ellipsis;" id="sidebar-name">Loading...</div>
@@ -375,23 +341,28 @@
     </div>
   </aside>
 
+  <!-- MAIN CONTENT -->
   <main id="main-content">
-
     <!-- DASHBOARD -->
-    <div id="dashboard-screen" class="screen active glass">
-      <h1 class="dash-header">Welcome back, <span id="dash-name">Student</span>! 🌱</h1>
-      <div class="stat-card glass" style="margin-bottom: 24px; text-align: center; font-style: italic; font-size: 18px;">
-        "The beautiful thing about learning is that no one can take it away from you." – B.B. King
+    <div id="dashboard-screen" class="screen active">
+      <!-- Mobile Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 class="dash-header" style="margin: 0;">Welcome, <span id="dash-name">Student</span>!</h1>
+        <div class="avatar" id="dash-avatar" style="display: none;" onclick="document.getElementById('profile-modal').classList.add('active')">🦊</div>
+      </div>
+
+      <div class="stat-card glass" style="margin-bottom: 20px; text-align: center; font-style: italic; font-size: 16px;">
+        "The beautiful thing about learning is that no one can take it away from you."
       </div>
       <div class="stats-grid">
-        <div class="stat-card glass"><div class="stat-title">🔥 Daily Streak</div><div class="stat-value" id="dash-streak">1 Day</div></div>
+        <div class="stat-card glass"><div class="stat-title">🔥 Streak</div><div class="stat-value" id="dash-streak">1 Day</div></div>
         <div class="stat-card glass"><div class="stat-title">✨ Total XP</div><div class="stat-value" id="dash-xp">0</div></div>
       </div>
       <div class="tools-grid">
         <div class="tool-card glass">
           <h3>⏱️ Focus Timer</h3>
           <div class="timer-display" id="timer-display">25:00</div>
-          <div class="timer-controls">
+          <div class="timer-controls" style="display:flex; gap:10px; justify-content:center;">
             <button class="btn btn-primary" id="timer-start-btn">Start</button>
             <button class="btn btn-secondary" id="timer-reset-btn">Reset</button>
           </div>
@@ -405,17 +376,12 @@
           <div class="task-list" id="task-list"></div>
         </div>
       </div>
-      <div class="stat-card glass" style="margin-top: 24px;">
-        <h3 style="margin-bottom: 12px; color: var(--primary);">💡 Study Tip of the Day</h3>
-        <p style="font-size: 16px; line-height: 1.6;">Use the <b>Feynman Technique</b>: Try to explain a concept in simple terms as if teaching a 5-year-old. If you get stuck, you've found a gap in your understanding.</p>
-      </div>
     </div>
 
     <!-- AI STUDIO -->
     <div id="studio-screen" class="screen">
       <div class="top-bar">
         <div class="model-badge"><div class="model-dot"></div> Nova Core AI</div>
-        <div style="font-size: 14px; font-weight: 600;">Shift + Enter for new line</div>
       </div>
       <div id="chat-container">
         <div class="chat-inner" id="chat-inner">
@@ -426,8 +392,8 @@
           </div>
         </div>
       </div>
-      <div class="input-wrapper">
-        <div class="input-container glass">
+      <div class="input-wrapper glass">
+        <div class="input-container">
           <div class="input-tools">
             <button class="tool-btn active" id="mode-text-btn">💬 Chat & Code</button>
             <button class="tool-btn" id="mode-image-btn">🎨 Generate Image</button>
@@ -440,43 +406,39 @@
       </div>
     </div>
 
-    <!-- QUIZZES & WORKSHEETS -->
+    <!-- QUIZZES -->
     <div id="quiz-screen" class="screen glass">
-      <h1 style="font-size: 32px; margin-bottom: 20px;">📝 Quizzes & Worksheets</h1>
+      <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">📝 Quizzes & Worksheets</h1>
       <div class="quiz-header">
         <select id="quiz-subject">
           <option value="Mathematics">Mathematics</option>
           <option value="Science">Science</option>
           <option value="Social Science">Social Science</option>
           <option value="English">English</option>
-          <option value="Hindi">Hindi</option>
-          <option value="Sanskrit">Sanskrit</option>
         </select>
         <select id="quiz-difficulty">
           <option value="Easy">Easy</option>
           <option value="Medium">Medium</option>
           <option value="Hard">Hard</option>
         </select>
-        <input type="text" id="quiz-topic" placeholder="Specific topic (e.g., 'Fractions', 'Photosynthesis')">
+        <input type="text" id="quiz-topic" placeholder="Specific topic">
       </div>
-      <div class="quiz-btn-group">
-        <button class="btn btn-primary" id="generate-quiz-btn">🎯 Generate Quiz</button>
-        <button class="btn btn-secondary" id="generate-worksheet-btn">📄 Generate Worksheet</button>
+      <div class="quiz-btn-group" style="display:flex; gap:10px; margin-bottom:20px;">
+        <button class="btn btn-primary" id="generate-quiz-btn" style="flex:1;">🎯 Quiz</button>
+        <button class="btn btn-secondary" id="generate-worksheet-btn" style="flex:1;">📄 Worksheet</button>
       </div>
-      <div id="quiz-output" style="max-width: 800px; margin: 0 auto; width: 100%;"></div>
+      <div id="quiz-output"></div>
     </div>
 
     <!-- MOTIVATION -->
     <div id="motivation-screen" class="screen glass">
-      <h1 style="font-size: 32px; margin-bottom: 20px;">🔥 Fuel Your Fire</h1>
+      <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🔥 Fuel Your Fire</h1>
       <div class="motivation-grid">
         <div class="motivation-quote-cloud">
           <div class="q-cloud-text">If you think you'll lose, you've already lost.</div>
           <div class="q-cloud-text">It always seems impossible until it's done.</div>
-          <div class="q-cloud-text">Do it alone. Do it broke. Do it tired. Do it afraid, just do it.</div>
-          <div class="q-cloud-text">You have to sacrifice. Turn the pain into power.</div>
-          <div class="q-cloud-text">What would Goggins do?</div>
-          <div class="q-cloud-text">A journey with a thousand miles begins with one step.</div>
+          <div class="q-cloud-text">Do it alone. Do it broke. Do it tired.</div>
+          <div class="q-cloud-text">Turn the pain into power.</div>
         </div>
         <div class="motivation-collage">
           <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop" alt="Discipline">
@@ -485,53 +447,39 @@
       </div>
     </div>
 
-    <!-- STUDY PLANNER -->
+    <!-- PLANNER -->
     <div id="planner-screen" class="screen glass">
-      <h1 style="font-size: 32px; margin-bottom: 20px;">📅 Cloud Study Planner</h1>
+      <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">📅 Study Planner</h1>
       <div class="planner-container">
         <div class="planner-grid" id="planner-grid"></div>
       </div>
     </div>
 
-    <!-- MUSIC STUDIO -->
+    <!-- MUSIC -->
     <div id="music-screen" class="screen glass">
-      <h1 style="font-size: 32px; margin-bottom: 20px;">🎵 Music Studio</h1>
+      <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🎵 Music Studio</h1>
       <div class="music-search-row">
         <input type="text" id="music-search-input" placeholder="Search songs...">
         <button class="btn btn-primary" id="music-search-btn">Search</button>
       </div>
-      <div class="music-grid" id="trending-grid"><p>Loading trending...</p></div>
+      <div class="music-grid" id="trending-grid"></div>
       <div class="music-grid" id="music-grid"></div>
     </div>
 
-    <!-- SYLLABUS HUB -->
+    <!-- SYLLABUS -->
     <div id="syllabus-screen" class="screen glass">
-      <h1 style="font-size: 32px; margin-bottom: 20px;">📚 CBSE Class 8 Syllabus</h1>
+      <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">📚 Syllabus Hub</h1>
       <div class="syllabus-grid" id="syllabus-grid"></div>
     </div>
 
     <!-- FLASHCARDS -->
     <div id="flashcard-screen" class="screen glass">
-      <h1 style="font-size: 32px; margin-bottom: 20px;">🃏 AI Flashcards</h1>
-      <div class="task-input-row" style="max-width: 800px;">
+      <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🃏 AI Flashcards</h1>
+      <div class="task-input-row">
         <input type="text" id="flashcard-topic" placeholder="Enter a topic...">
         <button class="btn btn-primary" id="gen-card-btn">Generate</button>
       </div>
       <div class="flashcard-grid" id="flashcard-grid"></div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div id="settings-screen" class="screen glass">
-      <h1 style="font-size: 32px; margin-bottom: 24px;">⚙️ Settings</h1>
-      <div class="settings-card glass" style="max-width: 600px; padding: 30px; margin-bottom: 24px;">
-        <h2 style="margin-bottom: 20px;">👤 Profile</h2>
-        <p style="margin-bottom: 20px; color: var(--text-muted);">Click your profile in the bottom left corner to change your name and emoji.</p>
-        <button class="btn btn-primary" onclick="document.getElementById('profile-modal').classList.add('active')">Open Profile</button>
-      </div>
-      <div class="settings-card glass" style="max-width: 600px; padding: 30px;">
-        <h2 style="margin-bottom: 20px;">⚠️ Data</h2>
-        <button class="btn btn-primary" style="background: #ef4444;" id="reset-data-btn">Log Out</button>
-      </div>
     </div>
 
   </main>
@@ -554,7 +502,7 @@
         tasks: [], planner: {},
         timer: { interval: null, timeLeft: 1500, isRunning: false },
         chat: { history: [], mode: 'text', isGenerating: false },
-        theme: localStorage.getItem("nova_theme") || "theme-official" // Default to Official
+        theme: localStorage.getItem("nova_theme") || "theme-official"
       };
 
       // UTILS
@@ -584,12 +532,12 @@
         let formatted = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         formatted = formatted.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
           const id = 'code-' + Math.random().toString(36).substr(2, 9);
-          return `<div class="code-block"><div class="code-header"><span>${lang || 'code'}</span><button class="copy-code-btn" data-code-id="${id}">📋 Copy</button></div><pre id="${id}"><code>${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre></div>`;
+          return `<div style="background:#1e1e1e; border-radius:8px; margin:10px 0; overflow:hidden; color:#d4d4d4;"><div style="background:#2d2d2d; padding:8px 12px; display:flex; justify-content:space-between; font-size:12px; color:#a3a3a3; border-bottom:1px solid #444;"><span>${lang || 'code'}</span><button class="copy-code-btn" data-code-id="${id}" style="background:transparent; border:1px solid #555; color:white; padding:2px 8px; border-radius:4px; cursor:pointer;">📋 Copy</button></div><pre style="padding:12px; overflow-x:auto; font-family:monospace; font-size:14px;" id="${id}"><code>${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre></div>`;
         });
         return formatted.replace(/\n/g, '<br>');
       }
 
-      // AUTH (Username & Password)
+      // AUTH
       let isLoginMode = true;
       const authOverlay = document.getElementById('auth-overlay');
       const authTitle = document.getElementById('auth-title');
@@ -632,13 +580,12 @@
         }
       });
 
-      // LOGOUT
       function logout() {
         supabase.auth.signOut();
         document.getElementById('profile-modal').classList.remove('active');
+        switchScreen('dashboard-screen', document.querySelector('.nav-item'));
       }
       document.getElementById('modal-logout-btn').addEventListener('click', logout);
-      document.getElementById('reset-data-btn').addEventListener('click', logout);
 
       supabase.auth.onAuthStateChange((event, session) => {
         if (session) {
@@ -657,7 +604,7 @@
       async function loadUserData() {
         if (!currentUser) return;
 
-        let { data: profile, error: profErr } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+        let { data: profile } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
         if (!profile) {
           const rawName = currentUser.email.split('@')[0];
           const { data } = await supabase.from('profiles').insert([{ id: currentUser.id, name: rawName, xp: 0, avatar: '🦊' }]).select().single();
@@ -692,7 +639,6 @@
         document.getElementById('dash-xp').innerText = state.profile.xp;
         document.getElementById('sidebar-xp').innerText = state.profile.xp;
         
-        // Highlight selected emoji in modal
         document.querySelectorAll('.emoji-option').forEach(el => {
           if (el.dataset.emoji === state.profile.avatar) el.classList.add('selected');
           else el.classList.remove('selected');
@@ -707,14 +653,7 @@
         await supabase.from('profiles').update({ xp: state.profile.xp }).eq('id', currentUser.id);
       }
 
-      // PROFILE MODAL LOGIC
-      document.getElementById('open-profile-btn').addEventListener('click', () => {
-        document.getElementById('profile-modal').classList.add('active');
-      });
-      document.getElementById('modal-close-btn').addEventListener('click', () => {
-        document.getElementById('profile-modal').classList.remove('active');
-      });
-      
+      // PROFILE MODAL
       let selectedEmoji = "🦊";
       document.querySelectorAll('.emoji-option').forEach(el => {
         el.addEventListener('click', (e) => {
@@ -733,6 +672,10 @@
         updateUI();
         await supabase.from('profiles').update({ name: state.profile.name, avatar: state.profile.avatar }).eq('id', currentUser.id);
         showToast("Profile Updated!");
+        document.getElementById('profile-modal').classList.remove('active');
+      });
+
+      document.getElementById('modal-close-btn').addEventListener('click', () => {
         document.getElementById('profile-modal').classList.remove('active');
       });
 
@@ -786,7 +729,7 @@
         }
       });
 
-      // TIMER & NAV
+      // TIMER
       function updateTimerDisplay() {
         const m = Math.floor(state.timer.timeLeft / 60).toString().padStart(2, '0');
         const s = (state.timer.timeLeft % 60).toString().padStart(2, '0');
@@ -811,18 +754,53 @@
       }
       document.getElementById('timer-reset-btn').addEventListener('click', resetTimer);
 
-      document.getElementById('sidebar-toggle').addEventListener('click', () => {
-        document.getElementById('sidebar').classList.toggle('collapsed');
+      // NAVIGATION & MOBILE CLOSING
+      const mobileBackBtn = document.getElementById('mobile-back-btn');
+
+      window.switchScreen = function(screenId, navElement) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        
+        // Update sidebar active state (Desktop)
+        if(navElement) {
+          document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+          navElement.classList.add('active');
+        }
+
+        // Mobile logic
+        if (window.innerWidth <= 768) {
+          if (screenId === 'dashboard-screen') {
+            mobileBackBtn.style.display = 'none';
+          } else {
+            mobileBackBtn.style.display = 'flex';
+          }
+        }
+      }
+
+      mobileBackBtn.addEventListener('click', () => {
+        switchScreen('dashboard-screen', document.querySelector('.nav-item'));
       });
+
       document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', (e) => {
           const target = e.currentTarget.dataset.target;
-          document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-          e.currentTarget.classList.add('active');
-          document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-          document.getElementById(target).classList.add('active');
+          if(target) switchScreen(target, e.currentTarget);
         });
       });
+
+      // Handle resize for back button
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          mobileBackBtn.style.display = 'none';
+        } else {
+          const activeScreen = document.querySelector('.screen.active');
+          if (activeScreen && activeScreen.id !== 'dashboard-screen') {
+            mobileBackBtn.style.display = 'flex';
+          }
+        }
+      });
+
+      // THEME SWITCHER
       document.querySelectorAll('.theme-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const theme = e.currentTarget.dataset.theme;
@@ -831,7 +809,7 @@
         });
       });
 
-      // AI STUDIO & QUIZ
+      // AI STUDIO
       function addMessageToUI(role, text, isImage = false, imageUrl = null) {
         const welcome = document.getElementById('welcome-screen');
         if (welcome) welcome.remove();
@@ -925,26 +903,27 @@
       document.getElementById('chat-input').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('send-btn').click(); }
       });
+      
       document.getElementById('mode-text-btn').addEventListener('click', () => {
         state.chat.mode = 'text'; document.getElementById('mode-text-btn').classList.add('active'); document.getElementById('mode-image-btn').classList.remove('active');
         document.getElementById('chat-input').placeholder = "Message Nova AI...";
       });
+      
       document.getElementById('mode-image-btn').addEventListener('click', () => {
         state.chat.mode = 'image'; document.getElementById('mode-image-btn').classList.add('active'); document.getElementById('mode-text-btn').classList.remove('active');
         document.getElementById('chat-input').placeholder = "Describe the image...";
       });
 
-      // Quizzes
+      // QUIZZES
       const quizOutput = document.getElementById('quiz-output');
       document.getElementById('generate-quiz-btn').addEventListener('click', async () => {
         const subject = document.getElementById('quiz-subject').value;
-        const difficulty = document.getElementById('quiz-difficulty').value;
         const topic = document.getElementById('quiz-topic').value.trim() || subject;
         const btn = document.getElementById('generate-quiz-btn');
         btn.innerText = "Generating..."; btn.disabled = true;
         quizOutput.innerHTML = `<div class="typing-dots" style="text-align:center;"><span></span><span></span><span></span></div>`;
         try {
-          const prompt = `Generate a 5-question multiple choice quiz for CBSE Class 8 ${subject} on "${topic}". Difficulty: ${difficulty}. Return ONLY JSON array: [{"question": "...", "options": ["...", "..."], "answer": "..."}]. No markdown.`;
+          const prompt = `Generate a 5-question multiple choice quiz for CBSE Class 8 ${subject} on "${topic}". Return ONLY JSON array: [{"question": "...", "options": ["...", "..."], "answer": "..."}]. No markdown.`;
           const response = await puter.ai.chat(prompt);
           let text = extractText(response);
           if (text.includes('```')) text = text.replace(/```json/g, '').replace(/```/g, '').trim();
@@ -952,9 +931,9 @@
           
           quizOutput.innerHTML = questions.map((q, i) => `
             <div class="question-card" id="q-card-${i}">
-              <div class="question-title">${i+1}. ${q.question}</div>
+              <div style="font-weight: 600; margin-bottom: 10px;">${i+1}. ${q.question}</div>
               <div class="options-grid">
-                ${q.options.map(opt => `<label class="option-label"><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`).join('')}
+                ${q.options.map(opt => `<label style="display:flex; align-items:center; gap:10px; padding:10px; border:1px solid var(--glass-border); border-radius:8px; cursor:pointer; margin-bottom:5px;"><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`).join('')}
               </div>
             </div>
           `).join('') + `<button class="btn btn-primary" id="submit-quiz-btn" style="width:100%; margin-top:20px;">Submit Answers</button>`;
@@ -963,12 +942,6 @@
             let score = 0;
             questions.forEach((q, i) => {
               const selected = document.querySelector(`input[name="q${i}"]:checked`);
-              const labels = document.querySelectorAll(`#q-card-${i} .option-label`);
-              labels.forEach(label => {
-                const input = label.querySelector('input');
-                if (input.value === q.answer) label.classList.add('correct');
-                if (selected && selected.value === input.value && input.value !== q.answer) label.classList.add('incorrect');
-              });
               if (selected && selected.value === q.answer) score++;
             });
             showToast(`You scored ${score}/${questions.length}!`);
@@ -977,21 +950,6 @@
           });
         } catch (err) { quizOutput.innerHTML = `<p style="color:red;">Error generating quiz.</p>`; } 
         finally { btn.innerText = "🎯 Generate Quiz"; btn.disabled = false; }
-      });
-
-      document.getElementById('generate-worksheet-btn').addEventListener('click', async () => {
-        const subject = document.getElementById('quiz-subject').value;
-        const topic = document.getElementById('quiz-topic').value.trim() || subject;
-        const btn = document.getElementById('generate-worksheet-btn');
-        btn.innerText = "Generating..."; btn.disabled = true;
-        quizOutput.innerHTML = `<div class="typing-dots" style="text-align:center;"><span></span><span></span><span></span></div>`;
-        try {
-          const prompt = `Generate a study worksheet for CBSE Class 8 ${subject} on "${topic}". Include 5 open-ended and 2 long-answer questions. Format cleanly with headings.`;
-          const response = await puter.ai.chat(prompt);
-          quizOutput.innerHTML = `<div class="worksheet-area">${formatMarkdown(extractText(response))}</div>`;
-          addXP(10);
-        } catch (err) { quizOutput.innerHTML = `<p style="color:red;">Error generating worksheet.</p>`; } 
-        finally { btn.innerText = "📄 Generate Worksheet"; btn.disabled = false; }
       });
 
       // PLANNER
@@ -1003,7 +961,7 @@
         let html = `<div class="planner-header">Time</div>`;
         days.forEach(day => html += `<div class="planner-header">${day}</div>`);
         timeSlots.forEach(slot => {
-          html += `<div class="time-slot">${slot}</div>`;
+          html += `<div class="planner-header" style="background:var(--glass-bg); color:var(--text-main); padding:12px; font-size:12px;">${slot}</div>`;
           days.forEach(day => {
             const cellTasks = (state.planner[day] && state.planner[day][slot]) ? state.planner[day][slot] : [];
             let taskHtml = cellTasks.map((task) => `<div class="planner-task">${task.task_text} <button class="plan-delete-btn" data-id="${task.id}">✕</button></div>`).join('');
@@ -1047,14 +1005,15 @@
         }
       });
 
-      // MUSIC, SYLLABUS, FLASHCARDS
+      // MUSIC & SYLLABUS
       async function loadTrending() {
         const grid = document.getElementById('trending-grid');
         try {
           const data = await (await fetch(`https://itunes.apple.com/search?term=trending+hindi&entity=song&limit=6&country=IN`)).json();
-          grid.innerHTML = data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4>${t.trackName}</h4><p>${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('');
+          grid.innerHTML = data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('');
         } catch (e) { grid.innerHTML = "<p>Could not load music.</p>"; }
       }
+      
       document.getElementById('music-search-btn').addEventListener('click', async () => {
         const query = document.getElementById('music-search-input').value.trim();
         if (!query) return;
@@ -1062,7 +1021,7 @@
         grid.innerHTML = "<p>Searching...</p>";
         try {
           const data = await (await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12&country=IN`)).json();
-          grid.innerHTML = data.results.length ? data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4>${t.trackName}</h4><p>${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('') : "<p>No results.</p>";
+          grid.innerHTML = data.results.length ? data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('') : "<p>No results.</p>";
         } catch (e) { grid.innerHTML = "<p>Error.</p>"; }
       });
 
@@ -1074,21 +1033,15 @@
       function renderSyllabus() {
         document.getElementById('syllabus-grid').innerHTML = syllabusData.map((sub, si) => `
           <div class="syllabus-card" id="sub-${si}">
-            <h3>${sub.subject}</h3><span class="book-name">${sub.book}</span>
-            <div class="progress-container"><div class="progress-bar" id="prog-${si}"></div></div>
-            <ul>${sub.chapters.map(ch => `<li><input type="checkbox" class="chap-check" data-si="${si}" data-total="${sub.chapters.length}"> <span>${ch}</span></li>`).join('')}</ul>
+            <h3 style="margin-bottom:8px;">${sub.subject}</h3><span style="font-size:12px; color:var(--text-muted); margin-bottom:15px; display:block;">${sub.book}</span>
+            <ul style="list-style:none; padding:0;">
+              ${sub.chapters.map(ch => `<li style="padding:10px 0; border-bottom:1px solid var(--glass-border); display:flex; align-items:center; gap:10px; font-size:14px;"><input type="checkbox" style="width:18px; height:18px;"> <span>${ch}</span></li>`).join('')}
+            </ul>
           </div>
         `).join('');
       }
-      document.getElementById('syllabus-grid').addEventListener('change', (e) => {
-        if (e.target.classList.contains('chap-check')) {
-          const si = e.target.dataset.si;
-          const card = document.getElementById(`sub-${si}`);
-          const checked = card.querySelectorAll('.chap-check:checked').length;
-          document.getElementById(`prog-${si}`).style.width = `${(checked / e.target.dataset.total) * 100}%`;
-        }
-      });
 
+      // FLASHCARDS
       document.getElementById('gen-card-btn').addEventListener('click', async () => {
         const topic = document.getElementById('flashcard-topic').value.trim();
         if (!topic) return;
