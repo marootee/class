@@ -112,7 +112,7 @@
        MAIN CONTENT & SCREENS
        ========================================================================== */
     #main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; padding: 16px 16px 16px 0; overflow: hidden; position: relative; z-index: 2; }
-    .screen { display: none; flex-direction: column; height: 100%; width: 100%; overflow-y: auto; padding: 30px; padding-bottom: 100px; /* Fixed overlap */ }
+    .screen { display: none; flex-direction: column; height: 100%; width: 100%; overflow-y: auto; padding: 30px; padding-bottom: 100px; }
     .screen.active { display: flex; animation: fadeSlideIn var(--transition-smooth) forwards; }
     @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -167,7 +167,7 @@
 
     /* Feed */
     .feed { display: flex; flex-direction: column; gap: 20px; }
-    .post { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
+    .post { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); animation: fadeSlideIn 0.3s ease; }
     .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
     .post-header .avatar { width: 42px; height: 42px; font-size: 20px; }
     .post-info { display: flex; flex-direction: column; }
@@ -187,9 +187,13 @@
     .comment .avatar { width: 30px; height: 30px; font-size: 14px; }
     .comment-body { background: rgba(0,0,0,0.2); padding: 10px 15px; border-radius: 15px; flex: 1; }
     .comment-body .name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
-    .comment-body .text { font-size: 14px; }
+    .comment-body .text { font-size: 14px; color: #fff; }
     .comment-input-row { display: flex; gap: 10px; }
-    .comment-input-row input { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: white; outline: none; }
+    /* FIX: Made comment text visible */
+    .comment-input-row input { 
+      flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--glass-border); 
+      background: rgba(0,0,0,0.3); color: #ffffff; outline: none; font-size: 14px;
+    }
     .comment-input-row button { padding: 0 20px; border-radius: 20px; }
 
     /* AI STUDIO */
@@ -280,7 +284,7 @@
       
       .screen { 
         position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 65px); 
-        z-index: 1000; background: var(--bg-base); padding: 80px 15px 100px 15px; /* Fixed overlap */
+        z-index: 1000; background: var(--bg-base); padding: 80px 15px 100px 15px; 
         border-radius: 0; border: none; overflow-y: auto; display: none; 
       }
       .screen.active { display: flex; }
@@ -308,7 +312,7 @@
       
       #studio-screen { padding: 0; }
       #studio-screen .top-bar { display: none; }
-      #chat-container { padding: 80px 15px 200px 15px; } /* Extra padding for input */
+      #chat-container { padding: 80px 15px 200px 15px; }
       .msg-content { font-size: 15px; padding: 14px 18px; }
       .input-wrapper { padding: 10px; position: fixed; bottom: 65px; left: 0; width: 100%; z-index: 1500; background: var(--bg-base); }
       
@@ -784,12 +788,12 @@
       });
 
       // ==========================================================================
-      // SOCIAL HUB LOGIC (FIXED)
+      // SOCIAL HUB LOGIC (NO RELOAD & FIXED VISIBILITY)
       // ==========================================================================
       
       async function loadAllUsers() {
         const row = document.getElementById('users-row');
-        // Fetch ALL profiles, not just 20
+        // Fetch ALL profiles
         const { data: profiles, error } = await supabase.from('profiles').select('*');
         
         if (error || !profiles) {
@@ -815,7 +819,6 @@
         const feed = document.getElementById('post-feed');
         feed.innerHTML = `<p style="text-align:center; padding:20px;">Loading feed...</p>`;
         
-        // Fetch Posts
         const { data: posts, error: postError } = await supabase
           .from('posts')
           .select('*')
@@ -831,7 +834,6 @@
           return;
         }
 
-        // Fetch All Profiles & Comments for mapping
         const { data: profiles } = await supabase.from('profiles').select('*');
         const profileMap = {};
         if (profiles) profiles.forEach(p => profileMap[p.id] = p);
@@ -845,7 +847,6 @@
           });
         }
 
-        // Render
         feed.innerHTML = posts.map(post => {
           const author = profileMap[post.user_id] || { name: 'Unknown Student', avatar: '👤' };
           const date = new Date(post.created_at);
@@ -893,6 +894,7 @@
         }).join('');
       }
 
+      // OPTIMISTIC COMMENT: No Reload
       window.addComment = async function(postId) {
         if (!currentUser) return;
         const input = document.getElementById(`comment-input-${postId}`);
@@ -908,11 +910,23 @@
         if (error) {
           showToast("Failed to comment", true);
         } else {
+          // Append the new comment directly to the UI
+          const commentHtml = `
+            <div class="comment">
+              <div class="avatar">${state.profile.avatar || '🦊'}</div>
+              <div class="comment-body">
+                <div class="name">${state.profile.name}</div>
+                <div class="text">${content}</div>
+              </div>
+            </div>
+          `;
+          const list = document.querySelector(`#comments-${postId} .comment-list`);
+          list.insertAdjacentHTML('beforeend', commentHtml);
           input.value = '';
-          loadSocialFeed(); // Reload feed to show comment
         }
       };
 
+      // OPTIMISTIC POST: No Reload
       document.getElementById('post-btn').addEventListener('click', async () => {
         if (!currentUser) return;
         const input = document.getElementById('post-content');
@@ -922,14 +936,41 @@
         const btn = document.getElementById('post-btn');
         btn.innerText = "Posting..."; btn.disabled = true;
 
-        const { error } = await supabase.from('posts').insert([{ user_id: currentUser.id, content }]);
+        const { data, error } = await supabase.from('posts').insert([{ user_id: currentUser.id, content }]).select().single();
         
         if (error) {
           showToast("Failed to post: " + error.message, true);
         } else {
+          // Create the new post HTML and prepend it
+          const date = new Date();
+          const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          
+          const newPostHtml = `
+            <div class="post" id="post-${data.id}">
+              <div class="post-header">
+                <div class="avatar">${state.profile.avatar}</div>
+                <div class="post-info">
+                  <div class="name">${state.profile.name}</div>
+                  <div class="time">${timeStr}</div>
+                </div>
+              </div>
+              <div class="post-content">${content}</div>
+              <div class="post-actions">
+                <button class="post-action-btn like-btn" onclick="this.classList.toggle('liked')">❤️ Like</button>
+                <button class="post-action-btn" onclick="document.getElementById('comments-${data.id}').classList.toggle('active')">💬 Comment (0)</button>
+              </div>
+              <div class="comments-section" id="comments-${data.id}">
+                <div class="comment-list"></div>
+                <div class="comment-input-row">
+                  <input type="text" id="comment-input-${data.id}" placeholder="Write a comment...">
+                  <button class="btn btn-primary" onclick="addComment('${data.id}')">Reply</button>
+                </div>
+              </div>
+            </div>
+          `;
+          document.getElementById('post-feed').insertAdjacentHTML('afterbegin', newPostHtml);
           input.value = '';
           showToast("Posted successfully!");
-          loadSocialFeed();
         }
         btn.innerText = "Post"; btn.disabled = false;
       });
@@ -1016,13 +1057,11 @@
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
         
-        // Update desktop sidebar
         if(navElement) {
           document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
           navElement.classList.add('active');
         }
         
-        // Update mobile bottom nav & auto-scroll
         document.querySelectorAll('.m-nav-item').forEach(n => {
           if(n.dataset.target === screenId) {
             n.classList.add('active');
@@ -1032,7 +1071,6 @@
           }
         });
 
-        // Mobile back button logic
         if (window.innerWidth <= 768) {
           if (screenId === 'dashboard-screen') {
             mobileBackBtn.style.display = 'none';
@@ -1041,7 +1079,6 @@
           }
         }
 
-        // Trigger specific loads
         if (screenId === 'social-screen') {
           loadAllUsers();
           loadSocialFeed();
@@ -1262,11 +1299,10 @@
         }
       });
 
-      // MUSIC & SYLLABUS (Fixed)
+      // MUSIC & SYLLABUS (FIXED SEARCH)
       async function loadTrending() {
         const grid = document.getElementById('trending-grid');
         try {
-          // Default to Motivational Hindi Songs
           const data = await (await fetch(`https://itunes.apple.com/search?term=motivational+hindi&entity=song&limit=6&country=IN`)).json();
           grid.innerHTML = data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('');
         } catch (e) { grid.innerHTML = "<p>Could not load music.</p>"; }
@@ -1278,10 +1314,15 @@
         const grid = document.getElementById('music-grid');
         grid.innerHTML = "<p>Searching...</p>";
         try {
-          // Append motivational to keep it safe, or just search directly
-          const data = await (await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12&country=IN`)).json();
-          grid.innerHTML = data.results.length ? data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('') : "<p>No results.</p>";
-        } catch (e) { grid.innerHTML = "<p>Error.</p>"; }
+          const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12&country=IN`);
+          const data = await res.json();
+          
+          if(data.results && data.results.length > 0) {
+            grid.innerHTML = data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('');
+          } else {
+            grid.innerHTML = "<p>No songs found.</p>";
+          }
+        } catch (e) { grid.innerHTML = "<p>Error searching songs.</p>"; }
       });
       
       document.getElementById('music-search-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('music-search-btn').click(); });
