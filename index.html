@@ -561,12 +561,12 @@
       </div>
     </div>
 
-    <!-- MUSIC -->
+    <!-- MUSIC (FIXED API & SAFE SEARCH) -->
     <div id="music-screen" class="screen glass">
       <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🎵 Music</h1>
       
       <div class="music-search-row">
-        <input type="text" id="music-search-input" placeholder="Search songs (e.g. Kesariya, Arijit Singh)...">
+        <input type="text" id="music-search-input" placeholder="Search songs (e.g. Kesariya)...">
         <button class="btn btn-primary" id="music-search-btn">Search</button>
       </div>
       
@@ -576,7 +576,7 @@
       </div>
 
       <div id="trending-container">
-        <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--primary);">🔥 Trending Hits</h2>
+        <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--primary);">🔥 Motivational Hits</h2>
         <div class="music-grid" id="trending-grid"></div>
       </div>
     </div>
@@ -906,19 +906,26 @@
         }).join('');
       }
 
-      // ADMIN DELETE FEED
+      // ADMIN DELETE FEED (Fixed Logic)
       document.getElementById('admin-delete-feed-btn').addEventListener('click', async () => {
         if (!confirm("ADMIN: Are you sure you want to delete ALL posts and comments?")) return;
         
-        await supabase.from('comments').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        const { error } = await supabase.from('posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        const btn = document.getElementById('admin-delete-feed-btn');
+        btn.innerText = "Deleting...";
         
-        if (!error) {
+        // Delete all comments first
+        const { error: err1 } = await supabase.from('comments').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        // Then delete all posts
+        const { error: err2 } = await supabase.from('posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        
+        if (!err1 && !err2) {
           showToast("Feed reset successfully!");
-          loadSocialFeed();
+          document.getElementById('post-feed').innerHTML = `<p style="text-align:center; color:var(--text-muted);">No posts yet. Be the first to share!</p>`;
         } else {
-          showToast("Error: " + error.message, true);
+          showToast("Error deleting feed. Check SQL policies.", true);
+          console.error(err1, err2);
         }
+        btn.innerText = "Delete Feed";
       });
 
       window.addComment = async function(postId) {
@@ -1322,27 +1329,23 @@
         }
       });
 
-      // MUSIC (JioSaavn API)
+      // MUSIC (iTunes API - 30s Preview)
       async function loadTrending() {
         const grid = document.getElementById('trending-grid');
-        grid.innerHTML = "<p>Loading trending songs...</p>";
+        grid.innerHTML = "<p>Loading motivational songs...</p>";
         try {
-          const res = await fetch(`https://saavn.dev/api/search/songs?query=trending+hits&limit=8`);
+          const res = await fetch(`https://itunes.apple.com/search?term=motivational+hindi&entity=song&limit=6&country=IN`);
           const data = await res.json();
           
-          if(data.data && data.data.results && data.data.results.length > 0) {
-            grid.innerHTML = data.data.results.map(t => {
-              const streamUrl = t.downloadUrl && t.downloadUrl.length > 0 ? t.downloadUrl[t.downloadUrl.length - 1].link : '#';
-              const imgUrl = t.image && t.image.length > 0 ? t.image[t.image.length - 1].link : 'https://via.placeholder.com/200';
-              return `
-                <div class="music-card">
-                  <img src="${imgUrl}">
-                  <h4 style="font-size:14px; margin:5px 0;">${t.name}</h4>
-                  <p style="font-size:12px; color:var(--text-muted);">${t.primaryArtistsId ? t.primaryArtists : 'Various Artists'}</p>
-                  <audio controls src="${streamUrl}"></audio>
-                </div>
-              `;
-            }).join('');
+          if(data.results && data.results.length > 0) {
+            grid.innerHTML = data.results.map(t => `
+              <div class="music-card">
+                <img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}">
+                <h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4>
+                <p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p>
+                <audio controls src="${t.previewUrl}"></audio>
+              </div>
+            `).join('');
           } else {
             grid.innerHTML = "<p>Could not load songs.</p>";
           }
@@ -1363,25 +1366,21 @@
         searchContainer.style.display = 'block';
         trendingContainer.style.display = 'none';
         
-        grid.innerHTML = "<p>Searching full songs...</p>";
+        grid.innerHTML = "<p>Searching songs...</p>";
         
         try {
-          const res = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}&limit=12`);
+          const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12&country=IN`);
           const data = await res.json();
           
-          if (data.data && data.data.results && data.data.results.length > 0) {
-            grid.innerHTML = data.data.results.map(t => {
-              const streamUrl = t.downloadUrl && t.downloadUrl.length > 0 ? t.downloadUrl[t.downloadUrl.length - 1].link : '#';
-              const imgUrl = t.image && t.image.length > 0 ? t.image[t.image.length - 1].link : 'https://via.placeholder.com/200';
-              return `
-                <div class="music-card">
-                  <img src="${imgUrl}">
-                  <h4 style="font-size:14px; margin:5px 0;">${t.name}</h4>
-                  <p style="font-size:12px; color:var(--text-muted);">${t.primaryArtistsId ? t.primaryArtists : 'Unknown'}</p>
-                  <audio controls src="${streamUrl}"></audio>
-                </div>
-              `;
-            }).join('');
+          if (data.results && data.results.length > 0) {
+            grid.innerHTML = data.results.map(t => `
+              <div class="music-card">
+                <img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}">
+                <h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4>
+                <p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p>
+                <audio controls src="${t.previewUrl}"></audio>
+              </div>
+            `).join('');
           } else {
             grid.innerHTML = "<p>No songs found.</p>";
           }
