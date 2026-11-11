@@ -112,7 +112,7 @@
        MAIN CONTENT & SCREENS
        ========================================================================== */
     #main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; padding: 16px 16px 16px 0; overflow: hidden; position: relative; z-index: 2; }
-    .screen { display: none; flex-direction: column; height: 100%; width: 100%; overflow-y: auto; padding: 30px; }
+    .screen { display: none; flex-direction: column; height: 100%; width: 100%; overflow-y: auto; padding: 30px; padding-bottom: 100px; /* Fixed overlap */ }
     .screen.active { display: flex; animation: fadeSlideIn var(--transition-smooth) forwards; }
     @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -179,10 +179,23 @@
     .post-action-btn:hover { color: var(--primary); }
     .post-action-btn.liked { color: #ef4444; }
 
+    /* Comments */
+    .comments-section { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--glass-border); }
+    .comments-section.active { display: block; }
+    .comment-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+    .comment { display: flex; gap: 10px; align-items: flex-start; }
+    .comment .avatar { width: 30px; height: 30px; font-size: 14px; }
+    .comment-body { background: rgba(0,0,0,0.2); padding: 10px 15px; border-radius: 15px; flex: 1; }
+    .comment-body .name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+    .comment-body .text { font-size: 14px; }
+    .comment-input-row { display: flex; gap: 10px; }
+    .comment-input-row input { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: white; outline: none; }
+    .comment-input-row button { padding: 0 20px; border-radius: 20px; }
+
     /* AI STUDIO */
     #studio-screen { padding: 0; overflow: hidden; }
     .top-bar { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: var(--border-width) solid var(--glass-border); background: var(--glass-bg); }
-    #chat-container { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; }
+    #chat-container { flex: 1; overflow-y: auto; padding: 30px; padding-bottom: 150px; display: flex; flex-direction: column; }
     .chat-inner { max-width: 850px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 24px; }
     .message { display: flex; gap: 16px; }
     .msg-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); }
@@ -267,7 +280,7 @@
       
       .screen { 
         position: fixed; top: 0; left: 0; width: 100vw; height: calc(100vh - 65px); 
-        z-index: 1000; background: var(--bg-base); padding: 80px 15px 20px 15px; 
+        z-index: 1000; background: var(--bg-base); padding: 80px 15px 100px 15px; /* Fixed overlap */
         border-radius: 0; border: none; overflow-y: auto; display: none; 
       }
       .screen.active { display: flex; }
@@ -295,7 +308,7 @@
       
       #studio-screen { padding: 0; }
       #studio-screen .top-bar { display: none; }
-      #chat-container { padding: 80px 15px 150px 15px; }
+      #chat-container { padding: 80px 15px 200px 15px; } /* Extra padding for input */
       .msg-content { font-size: 15px; padding: 14px 18px; }
       .input-wrapper { padding: 10px; position: fixed; bottom: 65px; left: 0; width: 100%; z-index: 1500; background: var(--bg-base); }
       
@@ -549,7 +562,7 @@
     <div id="music-screen" class="screen glass">
       <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🎵 Music</h1>
       <div class="music-search-row">
-        <input type="text" id="music-search-input" placeholder="Search songs...">
+        <input type="text" id="music-search-input" placeholder="Search motivational songs...">
         <button class="btn btn-primary" id="music-search-btn">Search</button>
       </div>
       <div class="music-grid" id="trending-grid"></div>
@@ -716,10 +729,6 @@
           });
         }
         renderPlanner();
-
-        // Load Social Data
-        loadAllUsers();
-        loadSocialFeed();
       }
 
       // UI UPDATES
@@ -775,21 +784,21 @@
       });
 
       // ==========================================================================
-      // SOCIAL HUB LOGIC (FIXED & UPGRADED)
+      // SOCIAL HUB LOGIC (FIXED)
       // ==========================================================================
       
       async function loadAllUsers() {
         const row = document.getElementById('users-row');
-        const { data: profiles, error } = await supabase.from('profiles').select('*').limit(20);
+        // Fetch ALL profiles, not just 20
+        const { data: profiles, error } = await supabase.from('profiles').select('*');
         
         if (error || !profiles) {
           row.innerHTML = "<p>Could not load users.</p>";
           return;
         }
 
-        // Simulate online/offline for visual effect (Randomly assign for now, or use a last_seen field in real production)
         row.innerHTML = profiles.map(p => {
-          const isOnline = Math.random() > 0.4; // 60% chance to show online
+          const isOnline = Math.random() > 0.3; // Visual simulation
           return `
             <div class="user-badge ${isOnline ? 'online' : ''}">
               <div class="avatar-wrap">
@@ -806,15 +815,13 @@
         const feed = document.getElementById('post-feed');
         feed.innerHTML = `<p style="text-align:center; padding:20px;">Loading feed...</p>`;
         
-        // 1. Fetch all posts
+        // Fetch Posts
         const { data: posts, error: postError } = await supabase
           .from('posts')
           .select('*')
-          .order('created_at', { ascending: false })
-          .limit(30);
+          .order('created_at', { ascending: false });
 
         if (postError) { 
-          console.error("Post fetch error:", postError); 
           feed.innerHTML = `<p style="text-align:center; color:red;">Error loading posts.</p>`;
           return; 
         }
@@ -824,19 +831,42 @@
           return;
         }
 
-        // 2. Fetch all profiles to map avatars/names manually (Fixes the join issue)
+        // Fetch All Profiles & Comments for mapping
         const { data: profiles } = await supabase.from('profiles').select('*');
         const profileMap = {};
         if (profiles) profiles.forEach(p => profileMap[p.id] = p);
 
-        // 3. Render Feed
+        const { data: allComments } = await supabase.from('comments').select('*').order('created_at', { ascending: true });
+        const commentsByPost = {};
+        if (allComments) {
+          allComments.forEach(c => {
+            if (!commentsByPost[c.post_id]) commentsByPost[c.post_id] = [];
+            commentsByPost[c.post_id].push(c);
+          });
+        }
+
+        // Render
         feed.innerHTML = posts.map(post => {
           const author = profileMap[post.user_id] || { name: 'Unknown Student', avatar: '👤' };
           const date = new Date(post.created_at);
           const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-          
+          const postComments = commentsByPost[post.id] || [];
+
+          const commentsHtml = postComments.map(c => {
+            const cAuthor = profileMap[c.user_id] || { name: 'Unknown', avatar: '👤' };
+            return `
+              <div class="comment">
+                <div class="avatar">${cAuthor.avatar}</div>
+                <div class="comment-body">
+                  <div class="name">${cAuthor.name}</div>
+                  <div class="text">${c.content}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
           return `
-            <div class="post">
+            <div class="post" id="post-${post.id}">
               <div class="post-header">
                 <div class="avatar">${author.avatar}</div>
                 <div class="post-info">
@@ -847,13 +877,41 @@
               <div class="post-content">${post.content}</div>
               <div class="post-actions">
                 <button class="post-action-btn like-btn" onclick="this.classList.toggle('liked')">❤️ Like</button>
-                <button class="post-action-btn">💬 Comment</button>
-                <button class="post-action-btn" onclick="navigator.clipboard.writeText('${post.content}'); showToast('Copied to clipboard!')">🔗 Share</button>
+                <button class="post-action-btn" onclick="document.getElementById('comments-${post.id}').classList.toggle('active')">💬 Comment (${postComments.length})</button>
+              </div>
+              <div class="comments-section" id="comments-${post.id}">
+                <div class="comment-list">
+                  ${commentsHtml}
+                </div>
+                <div class="comment-input-row">
+                  <input type="text" id="comment-input-${post.id}" placeholder="Write a comment...">
+                  <button class="btn btn-primary" onclick="addComment('${post.id}')">Reply</button>
+                </div>
               </div>
             </div>
           `;
         }).join('');
       }
+
+      window.addComment = async function(postId) {
+        if (!currentUser) return;
+        const input = document.getElementById(`comment-input-${postId}`);
+        const content = input.value.trim();
+        if (!content) return;
+
+        const { error } = await supabase.from('comments').insert([{ 
+          post_id: postId, 
+          user_id: currentUser.id, 
+          content 
+        }]);
+
+        if (error) {
+          showToast("Failed to comment", true);
+        } else {
+          input.value = '';
+          loadSocialFeed(); // Reload feed to show comment
+        }
+      };
 
       document.getElementById('post-btn').addEventListener('click', async () => {
         if (!currentUser) return;
@@ -868,11 +926,10 @@
         
         if (error) {
           showToast("Failed to post: " + error.message, true);
-          console.error(error);
         } else {
           input.value = '';
           showToast("Posted successfully!");
-          loadSocialFeed(); // Reload feed
+          loadSocialFeed();
         }
         btn.innerText = "Post"; btn.disabled = false;
       });
@@ -982,6 +1039,12 @@
           } else {
             mobileBackBtn.style.display = 'flex';
           }
+        }
+
+        // Trigger specific loads
+        if (screenId === 'social-screen') {
+          loadAllUsers();
+          loadSocialFeed();
         }
       }
 
@@ -1199,11 +1262,12 @@
         }
       });
 
-      // MUSIC & SYLLABUS
+      // MUSIC & SYLLABUS (Fixed)
       async function loadTrending() {
         const grid = document.getElementById('trending-grid');
         try {
-          const data = await (await fetch(`https://itunes.apple.com/search?term=trending+hindi&entity=song&limit=6&country=IN`)).json();
+          // Default to Motivational Hindi Songs
+          const data = await (await fetch(`https://itunes.apple.com/search?term=motivational+hindi&entity=song&limit=6&country=IN`)).json();
           grid.innerHTML = data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('');
         } catch (e) { grid.innerHTML = "<p>Could not load music.</p>"; }
       }
@@ -1214,10 +1278,13 @@
         const grid = document.getElementById('music-grid');
         grid.innerHTML = "<p>Searching...</p>";
         try {
+          // Append motivational to keep it safe, or just search directly
           const data = await (await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12&country=IN`)).json();
           grid.innerHTML = data.results.length ? data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('') : "<p>No results.</p>";
         } catch (e) { grid.innerHTML = "<p>Error.</p>"; }
       });
+      
+      document.getElementById('music-search-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('music-search-btn').click(); });
 
       const syllabusData = [
         { subject: "Mathematics", book: "Ganita Prakash", chapters: ["A Square and A Cube", "Power Play", "A Story of Numbers", "Quadrilaterals", "Number Play", "We Distribute, Yet Things Multiply", "Proportional Reasoning – 1", "Fractions in Disguise"] },
