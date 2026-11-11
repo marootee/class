@@ -81,11 +81,13 @@
     .mobile-theme-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; justify-content: center; }
     .mobile-theme-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
 
-    /* TOASTS */
-    #toast-container { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-    .toast { background: #10b981; color: #ffffff; padding: 14px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-weight: 700; font-size: 14px; animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 10px; border: 2px solid #ffffff; pointer-events: auto; }
+    /* ==========================================================================
+       TOASTS (FIXED Z-INDEX TO APPEAR ABOVE BLUR)
+       ========================================================================== */
+    #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10005; display: flex; flex-direction: column; gap: 10px; pointer-events: none; width: 90%; max-width: 400px; }
+    .toast { background: #10b981; color: #ffffff; padding: 16px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-weight: 700; font-size: 15px; animation: slideUpToast 0.3s ease forwards; display: flex; align-items: center; gap: 10px; border: 2px solid #ffffff; pointer-events: auto; text-align: center; justify-content: center; }
     .toast.error { background: #ef4444; }
-    @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideUpToast { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     /* ==========================================================================
        SIDEBAR (DESKTOP)
@@ -218,7 +220,7 @@
     .planner-cell { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); min-height: 100px; padding: 10px; cursor: pointer; }
     .planner-task { background: var(--primary); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 13px; margin-bottom: 5px; display: flex; justify-content: space-between; }
 
-    /* MUSIC (FULL SONGS) */
+    /* MUSIC */
     .music-search-row { display: flex; gap: 10px; margin-bottom: 24px; }
     .music-search-row input { flex: 1; padding: 14px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); outline: none; border-radius: var(--radius-md); }
     .music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
@@ -559,7 +561,7 @@
       </div>
     </div>
 
-    <!-- MUSIC (FULL LENGTH SONGS) -->
+    <!-- MUSIC -->
     <div id="music-screen" class="screen glass">
       <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🎵 Music</h1>
       
@@ -634,7 +636,7 @@
         toast.innerHTML = `<span>${isError ? '❌' : '✅'}</span> <span>${message}</span>`;
         container.appendChild(toast);
         setTimeout(() => {
-          toast.style.animation = 'slideInRight 0.3s ease reverse forwards';
+          toast.style.animation = 'slideUpToast 0.3s ease reverse forwards';
           setTimeout(() => toast.remove(), 300);
         }, 3000);
       }
@@ -706,8 +708,8 @@
           authOverlay.classList.add('hidden');
           loadUserData();
           
-          // ADMIN CHECK
-          if (currentUser.email === 'marootee@novaapp.com') {
+          // ADMIN CHECK (admin@novaapp.com)
+          if (currentUser.email === 'admin@novaapp.com') {
             document.getElementById('admin-delete-feed-btn').style.display = 'block';
           } else {
             document.getElementById('admin-delete-feed-btn').style.display = 'none';
@@ -908,9 +910,7 @@
       document.getElementById('admin-delete-feed-btn').addEventListener('click', async () => {
         if (!confirm("ADMIN: Are you sure you want to delete ALL posts and comments?")) return;
         
-        // Delete all comments first
         await supabase.from('comments').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        // Delete all posts
         const { error } = await supabase.from('posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         
         if (!error) {
@@ -1322,7 +1322,7 @@
         }
       });
 
-      // MUSIC (JioSaavn API for FULL SONGS)
+      // MUSIC (JioSaavn API)
       async function loadTrending() {
         const grid = document.getElementById('trending-grid');
         grid.innerHTML = "<p>Loading trending songs...</p>";
