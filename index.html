@@ -140,12 +140,8 @@
     .task-item.completed span { text-decoration: line-through; opacity: 0.5; }
     .task-item button { background: none; border: none; color: #ef4444; font-size: 20px; cursor: pointer;}
 
-    /* ==========================================================================
-       SOCIAL HUB (Instagram/Twitter Style)
-       ========================================================================== */
+    /* SOCIAL HUB */
     .social-container { max-width: 800px; margin: 0 auto; width: 100%; }
-    
-    /* Users Row */
     .users-section { margin-bottom: 30px; }
     .users-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
     .users-row { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
@@ -158,14 +154,12 @@
     .user-badge.online .status-dot { background: #10b981; }
     .user-badge span { font-size: 12px; font-weight: 600; text-align: center; width: 65px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Create Post */
     .create-post-box { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 30px; box-shadow: var(--shadow); display: flex; gap: 15px; }
     .create-post-box .avatar { width: 50px; height: 50px; font-size: 26px; }
     .create-post-input-area { flex: 1; display: flex; flex-direction: column; gap: 10px; }
     .create-post-input-area textarea { width: 100%; border: none; background: transparent; color: var(--text-main); font-size: 16px; resize: none; outline: none; min-height: 60px; }
     .create-post-actions { display: flex; justify-content: flex-end; border-top: 1px solid var(--glass-border); padding-top: 10px; }
 
-    /* Feed */
     .feed { display: flex; flex-direction: column; gap: 20px; }
     .post { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); animation: fadeSlideIn 0.3s ease; }
     .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
@@ -179,7 +173,6 @@
     .post-action-btn:hover { color: var(--primary); }
     .post-action-btn.liked { color: #ef4444; }
 
-    /* Comments */
     .comments-section { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--glass-border); }
     .comments-section.active { display: block; }
     .comment-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
@@ -189,7 +182,6 @@
     .comment-body .name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
     .comment-body .text { font-size: 14px; color: #fff; }
     .comment-input-row { display: flex; gap: 10px; }
-    /* FIX: Made comment text visible */
     .comment-input-row input { 
       flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--glass-border); 
       background: rgba(0,0,0,0.3); color: #ffffff; outline: none; font-size: 14px;
@@ -226,11 +218,12 @@
     .planner-cell { background: var(--glass-bg); border: var(--border-width) solid var(--glass-border); border-radius: var(--radius-md); min-height: 100px; padding: 10px; cursor: pointer; }
     .planner-task { background: var(--primary); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 13px; margin-bottom: 5px; display: flex; justify-content: space-between; }
 
+    /* MUSIC (UPDATED) */
     .music-search-row { display: flex; gap: 10px; margin-bottom: 24px; }
     .music-search-row input { flex: 1; padding: 14px; border: var(--border-width) solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); outline: none; border-radius: var(--radius-md); }
-    .music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+    .music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
     .music-card { background: var(--glass-bg); padding: 15px; border-radius: var(--radius-lg); text-align: center; border: var(--border-width) solid var(--glass-border); }
-    .music-card img { width: 100%; border-radius: var(--radius-md); margin-bottom: 10px; }
+    .music-card img { width: 100%; border-radius: var(--radius-md); margin-bottom: 10px; aspect-ratio: 1; object-fit: cover; }
     .music-card audio { width: 100%; height: 36px; margin-top: 10px; }
 
     .syllabus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
@@ -562,15 +555,27 @@
       </div>
     </div>
 
-    <!-- MUSIC -->
+    <!-- MUSIC (UPDATED LAYOUT) -->
     <div id="music-screen" class="screen glass">
       <h1 style="font-size: 24px; margin-bottom: 20px; margin-top: 10px;">🎵 Music</h1>
+      
+      <!-- Search Bar -->
       <div class="music-search-row">
-        <input type="text" id="music-search-input" placeholder="Search motivational songs...">
+        <input type="text" id="music-search-input" placeholder="Search full-length songs...">
         <button class="btn btn-primary" id="music-search-btn">Search</button>
       </div>
-      <div class="music-grid" id="trending-grid"></div>
-      <div class="music-grid" id="music-grid"></div>
+      
+      <!-- Search Results (Moved to Top) -->
+      <div id="search-results-container" style="display: none; margin-bottom: 30px;">
+        <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--primary);">Search Results</h2>
+        <div class="music-grid" id="music-grid"></div>
+      </div>
+
+      <!-- Trending / Motivational Section -->
+      <div id="trending-container">
+        <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--primary);">🔥 Motivational Songs</h2>
+        <div class="music-grid" id="trending-grid"></div>
+      </div>
     </div>
 
     <!-- SYLLABUS -->
@@ -787,13 +792,9 @@
         document.getElementById('profile-modal').classList.remove('active');
       });
 
-      // ==========================================================================
-      // SOCIAL HUB LOGIC (NO RELOAD & FIXED VISIBILITY)
-      // ==========================================================================
-      
+      // SOCIAL HUB
       async function loadAllUsers() {
         const row = document.getElementById('users-row');
-        // Fetch ALL profiles
         const { data: profiles, error } = await supabase.from('profiles').select('*');
         
         if (error || !profiles) {
@@ -802,7 +803,7 @@
         }
 
         row.innerHTML = profiles.map(p => {
-          const isOnline = Math.random() > 0.3; // Visual simulation
+          const isOnline = Math.random() > 0.3;
           return `
             <div class="user-badge ${isOnline ? 'online' : ''}">
               <div class="avatar-wrap">
@@ -894,7 +895,6 @@
         }).join('');
       }
 
-      // OPTIMISTIC COMMENT: No Reload
       window.addComment = async function(postId) {
         if (!currentUser) return;
         const input = document.getElementById(`comment-input-${postId}`);
@@ -910,7 +910,6 @@
         if (error) {
           showToast("Failed to comment", true);
         } else {
-          // Append the new comment directly to the UI
           const commentHtml = `
             <div class="comment">
               <div class="avatar">${state.profile.avatar || '🦊'}</div>
@@ -926,7 +925,6 @@
         }
       };
 
-      // OPTIMISTIC POST: No Reload
       document.getElementById('post-btn').addEventListener('click', async () => {
         if (!currentUser) return;
         const input = document.getElementById('post-content');
@@ -941,7 +939,6 @@
         if (error) {
           showToast("Failed to post: " + error.message, true);
         } else {
-          // Create the new post HTML and prepend it
           const date = new Date();
           const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
           
@@ -1299,33 +1296,74 @@
         }
       });
 
-      // MUSIC & SYLLABUS (FIXED SEARCH)
+      // ==========================================================================
+      // MUSIC (AUDIUS API - FULL LENGTH SONGS)
+      // ==========================================================================
       async function loadTrending() {
         const grid = document.getElementById('trending-grid');
+        grid.innerHTML = "<p>Loading motivational songs...</p>";
         try {
-          const data = await (await fetch(`https://itunes.apple.com/search?term=motivational+hindi&entity=song&limit=6&country=IN`)).json();
-          grid.innerHTML = data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('');
-        } catch (e) { grid.innerHTML = "<p>Could not load music.</p>"; }
+          // Fetch from Audius for full-length tracks
+          const res = await fetch(`https://discoveryprovider.audius.co/v1/tracks/trending?app_name=NovaAI&limit=6`);
+          const data = await res.json();
+          
+          if(data.data && data.data.length > 0) {
+            grid.innerHTML = data.data.map(t => `
+              <div class="music-card">
+                <img src="${t.artwork ? t.artwork['480x480'] : 'https://via.placeholder.com/200'}">
+                <h4 style="font-size:14px; margin:5px 0;">${t.title}</h4>
+                <p style="font-size:12px; color:var(--text-muted);">${t.user.name}</p>
+                <audio controls src="https://discoveryprovider.audius.co/v1/tracks/${t.id}/stream?app_name=NovaAI"></audio>
+              </div>
+            `).join('');
+          } else {
+            grid.innerHTML = "<p>Could not load songs.</p>";
+          }
+        } catch (e) { 
+          console.error(e);
+          grid.innerHTML = "<p>Could not load music.</p>"; 
+        }
       }
       
       document.getElementById('music-search-btn').addEventListener('click', async () => {
         const query = document.getElementById('music-search-input').value.trim();
         if (!query) return;
+        
+        const searchContainer = document.getElementById('search-results-container');
+        const trendingContainer = document.getElementById('trending-container');
         const grid = document.getElementById('music-grid');
-        grid.innerHTML = "<p>Searching...</p>";
+        
+        // Show search container, hide trending
+        searchContainer.style.display = 'block';
+        trendingContainer.style.display = 'none';
+        
+        grid.innerHTML = "<p>Searching full songs...</p>";
+        
         try {
-          const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=12&country=IN`);
+          const res = await fetch(`https://discoveryprovider.audius.co/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=NovaAI&limit=12`);
           const data = await res.json();
           
-          if(data.results && data.results.length > 0) {
-            grid.innerHTML = data.results.map(t => `<div class="music-card"><img src="${t.artworkUrl100.replace('100x100bb', '400x400bb')}"><h4 style="font-size:14px; margin:5px 0;">${t.trackName}</h4><p style="font-size:12px; color:var(--text-muted);">${t.artistName}</p><audio controls src="${t.previewUrl}"></audio></div>`).join('');
+          if (data.data && data.data.length > 0) {
+            grid.innerHTML = data.data.map(t => `
+              <div class="music-card">
+                <img src="${t.artwork ? t.artwork['480x480'] : 'https://via.placeholder.com/200'}">
+                <h4 style="font-size:14px; margin:5px 0;">${t.title}</h4>
+                <p style="font-size:12px; color:var(--text-muted);">${t.user.name}</p>
+                <audio controls src="https://discoveryprovider.audius.co/v1/tracks/${t.id}/stream?app_name=NovaAI"></audio>
+              </div>
+            `).join('');
           } else {
             grid.innerHTML = "<p>No songs found.</p>";
           }
-        } catch (e) { grid.innerHTML = "<p>Error searching songs.</p>"; }
+        } catch (e) { 
+          console.error(e);
+          grid.innerHTML = "<p>Error searching songs.</p>"; 
+        }
       });
       
-      document.getElementById('music-search-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('music-search-btn').click(); });
+      document.getElementById('music-search-input').addEventListener('keydown', (e) => { 
+        if (e.key === 'Enter') document.getElementById('music-search-btn').click(); 
+      });
 
       const syllabusData = [
         { subject: "Mathematics", book: "Ganita Prakash", chapters: ["A Square and A Cube", "Power Play", "A Story of Numbers", "Quadrilaterals", "Number Play", "We Distribute, Yet Things Multiply", "Proportional Reasoning – 1", "Fractions in Disguise"] },
