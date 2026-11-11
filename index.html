@@ -191,16 +191,24 @@
     @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
     /* ==========================================================================
-       MOBILE BOTTOM NAVIGATION BAR
+       MOBILE BOTTOM NAVIGATION BAR (SCROLLABLE)
        ========================================================================== */
     #mobile-nav {
       display: none;
       position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
       background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-top: var(--border-width) solid var(--glass-border); z-index: 2000;
-      justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom);
+      align-items: center; padding-bottom: env(safe-area-inset-bottom);
+      overflow-x: auto; overflow-y: hidden; white-space: nowrap;
+      scrollbar-width: none; -ms-overflow-style: none; 
     }
-    .m-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; color: var(--text-muted); cursor: pointer; transition: 0.2s; width: 20%; height: 100%; }
+    #mobile-nav::-webkit-scrollbar { display: none; }
+    
+    .m-nav-item {
+      display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 22px; color: var(--text-muted); cursor: pointer; transition: 0.2s;
+      min-width: 75px; height: 100%; flex-shrink: 0;
+    }
     .m-nav-item span { font-size: 10px; font-weight: 600; margin-top: 4px; }
     .m-nav-item.active { color: var(--primary); transform: translateY(-2px); }
     .m-nav-item:active { transform: scale(0.9); }
@@ -351,7 +359,6 @@
     <!-- DASHBOARD -->
     <div id="dashboard-screen" class="screen active">
       <h1 class="dash-header" style="margin-top: 15px;">Welcome, <span id="dash-name">Student</span>!</h1>
-      
       <div class="stat-card glass" style="margin-bottom: 20px; text-align: center; font-style: italic; font-size: 16px;">
         "The beautiful thing about learning is that no one can take it away from you."
       </div>
@@ -482,12 +489,16 @@
 
   </main>
 
-  <!-- MOBILE BOTTOM NAVIGATION -->
+  <!-- MOBILE BOTTOM NAVIGATION (SCROLLABLE) -->
   <nav id="mobile-nav">
     <div class="m-nav-item active" data-target="dashboard-screen" onclick="switchScreen('dashboard-screen', this)">🏠<span>Home</span></div>
     <div class="m-nav-item" data-target="studio-screen" onclick="switchScreen('studio-screen', this)">💬<span>AI Chat</span></div>
     <div class="m-nav-item" data-target="quiz-screen" onclick="switchScreen('quiz-screen', this)">📝<span>Quizzes</span></div>
+    <div class="m-nav-item" data-target="motivation-screen" onclick="switchScreen('motivation-screen', this)">🔥<span>Motivation</span></div>
     <div class="m-nav-item" data-target="planner-screen" onclick="switchScreen('planner-screen', this)">📅<span>Planner</span></div>
+    <div class="m-nav-item" data-target="music-screen" onclick="switchScreen('music-screen', this)">🎵<span>Music</span></div>
+    <div class="m-nav-item" data-target="syllabus-screen" onclick="switchScreen('syllabus-screen', this)">📚<span>Syllabus</span></div>
+    <div class="m-nav-item" data-target="flashcard-screen" onclick="switchScreen('flashcard-screen', this)">🃏<span>Flashcards</span></div>
     <div class="m-nav-item" onclick="document.getElementById('profile-modal').classList.add('active')">👤<span>Profile</span></div>
   </nav>
 
@@ -761,10 +772,14 @@
           navElement.classList.add('active');
         }
         
-        // Update mobile bottom nav
+        // Update mobile bottom nav & auto-scroll to active tab
         document.querySelectorAll('.m-nav-item').forEach(n => {
-          if(n.dataset.target === screenId) n.classList.add('active');
-          else n.classList.remove('active');
+          if(n.dataset.target === screenId) {
+            n.classList.add('active');
+            n.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          } else {
+            n.classList.remove('active');
+          }
         });
 
         // Mobile back button logic
